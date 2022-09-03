@@ -25,7 +25,7 @@ namespace cache {
         Link *frontLink;
         Link *tailLink;
     public:
-        class iterator {
+        class iterator : public std::iterator<std::bidirectional_iterator_tag, data_t> {
             Link* ptr_;
             friend class List;
         public:
