@@ -9,7 +9,7 @@ using namespace std;
 
 TEST(Map, Add) {
     unordered_map<int, int> map;
-    cache::HashMap<int, int> hmap(5);
+    cache::HashMap<int, int> hmap;
     EXPECT_EQ(map.size(), 0);
     EXPECT_EQ(hmap.size(), 0);
     map[1]= 1000;
@@ -28,7 +28,7 @@ TEST(Map, Add) {
 
 TEST(Map, Find) {
     unordered_map<int, int> map;
-    cache::HashMap<int, int> hmap(5);
+    cache::HashMap<int, int> hmap;
     EXPECT_EQ(map.size(), 0);
     EXPECT_EQ(hmap.size(), 0);
     map[1]= 1000;
@@ -55,7 +55,7 @@ TEST(Map, Find) {
 
 TEST(Map, Iterate) {
     unordered_map<int, int> map;
-    cache::HashMap<int, int> hmap(20);
+    cache::HashMap<int, int> hmap;
     EXPECT_EQ(map.size(), 0);
     EXPECT_EQ(hmap.size(), 0);
     for (int i=1; i<=10; i++) {
@@ -78,7 +78,7 @@ TEST(Map, Iterate) {
 
 TEST(Map, Erase) {
     unordered_map<int, int> map;
-    cache::HashMap<int, int> hmap(5);
+    cache::HashMap<int, int> hmap;
     EXPECT_EQ(map.size(), 0);
     EXPECT_EQ(hmap.size(), 0);
     map[1]= 1000;
