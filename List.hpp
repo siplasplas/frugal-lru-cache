@@ -118,8 +118,10 @@ namespace cache {
             tailLink->previous_ = previous;
             delete temp;
         }
+
         iterator begin() { return iterator(frontLink); }
         iterator end() { return iterator(tailLink); }
+
         void erase(const iterator position) {
             if (empty())
                 throw std::runtime_error("erase from empty list");
@@ -157,6 +159,12 @@ namespace cache {
             }
             postemp->previous_ = newtemp;
             assert(newtemp->next_);
+        }
+
+        void moveToFront(const iterator position) {
+            data_t data = position.ptr_->data_;
+            erase(position);
+            push_front(data);
         }
     };
 }

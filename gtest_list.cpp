@@ -263,3 +263,24 @@ TEST(List, insert_last) {
     mylist.insert(myit, 24);
     compare(list, mylist);
 }
+
+TEST(List, move_to_front) {
+    std::list<int> list;
+    cache::List<int> mylist;
+    std::list<int>::iterator it;
+    cache::List<int>::iterator myit;
+
+    fill(list, mylist);
+
+    it = list.end();
+    myit = mylist.end();
+    it--;
+    myit--;
+
+    int n = *it;
+    list.erase(it);
+    list.push_front(n);
+    mylist.moveToFront(myit);
+
+    compare(list, mylist);
+}
