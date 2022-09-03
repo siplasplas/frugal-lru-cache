@@ -3,9 +3,11 @@ project(gtest_lru)
 
 add_definitions("-Werror=return-type")
 
-add_executable(${PROJECT_NAME} lrucache.hpp gtest_lru.cpp)
+add_executable(${PROJECT_NAME} lrucache.hpp gtest_lru.cpp
+        List.hpp gtest_list.cpp)
 
 target_link_libraries(${PROJECT_NAME} gtest gtest_main)
 
 add_executable(test test.cpp lrucache.hpp
-        MemInfo.cpp MemInfo.h)
+        MemInfo.cpp MemInfo.h
+        List.hpp)
