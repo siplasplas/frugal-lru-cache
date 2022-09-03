@@ -31,7 +31,8 @@ namespace cache {
         public:
             iterator(): ptr_(nullptr) {}
             explicit iterator(Link* ptr): ptr_(ptr) {}
-            int operator* () { return ptr_->data_; }
+            data_t operator* () { return ptr_->data_; }
+            data_t* operator-> () { return &ptr_->data_; }
             iterator& operator++()
             {
                 if (ptr_->next_)
