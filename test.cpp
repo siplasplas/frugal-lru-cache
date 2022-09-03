@@ -4,21 +4,32 @@
 
 #include <iostream>
 #include <forward_list>
-#include "MemInfo.h"
+#include <malloc.h>
 #include "lrucache.hpp"
+#include "LRU.hpp"
 
 using namespace std;
 
-const int COUNT = 10*1000*1000;
+const int COUNT = 4*1000*1000;
 
 int main() {
-    MemInfo mi;
-    int a = mi.virtMem();
-    int b = mi.virtMem();
-    cache::lru_cache<int, int> cache_lru(COUNT);
+    auto m1a =  mallinfo2();
+    auto *lru_cache = new cache::lru_cache<int, int>(COUNT);
     for (int i=0; i<COUNT; i++) {
-        cache_lru.put(i, i);
+        lru_cache->put(i, i);
     }
-    cout << (mi.virtMem()-a)*1024.0/COUNT <<endl;
-    cout << (mi.virtMem()-b)*1024.0/COUNT <<endl;
+    auto m1b =  mallinfo2();
+    cout << "classic" << endl;
+    cout << double(m1b.uordblks-m1a.uordblks)/COUNT <<endl;
+    delete lru_cache;
+
+    auto m2a =  mallinfo2();
+    auto *LRU = new cache::LRU<int, int>(COUNT);
+    for (int i=0; i<COUNT; i++) {
+        LRU->put(i, i);
+    }
+    auto m2b =  mallinfo2();
+    cout << "with new List class" << endl;
+    cout << double(m2b.uordblks-m2a.uordblks)/COUNT <<endl;
+    delete LRU;
 }

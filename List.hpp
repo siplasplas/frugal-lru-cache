@@ -80,6 +80,12 @@ namespace cache {
             frontLink = tailLink;
         }
 
+        ~List() {
+            while(!empty())
+                pop_front();
+            delete tailLink;
+        }
+
         bool empty() {
             return frontLink == tailLink;
         }
