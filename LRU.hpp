@@ -14,10 +14,10 @@ namespace cache {
     class LRU {
     public:
         typedef typename std::pair<key_t, value_t> key_value_pair_t;
-        typedef typename List<key_value_pair_t>::iterator list_iterator_t;
+        typedef typename List<key_value_pair_t>::Link list_link_t;
     private:
         List<key_value_pair_t> _cache_items_list;
-        std::unordered_map<key_t, list_iterator_t> _cache_items_map;
+        std::unordered_map<key_t, list_link_t*> _cache_items_map;
         size_t _max_size;
     public:
         LRU(size_t max_size) :
@@ -25,13 +25,14 @@ namespace cache {
         }
 
         void put(const key_t& key, const value_t& value) {
-            auto it = _cache_items_map.find(key);
+            auto mapit = _cache_items_map.find(key);
             _cache_items_list.push_front(key_value_pair_t(key, value));
-            if (it != _cache_items_map.end()) {
-                _cache_items_list.erase(it->second);
-                _cache_items_map.erase(it);
+            if (mapit != _cache_items_map.end()) {
+                list_link_t *link = mapit->second;
+                _cache_items_list.erase(link);
+                _cache_items_map.erase(mapit);
             }
-            _cache_items_map[key] = _cache_items_list.begin();
+            _cache_items_map[key] = _cache_items_list.frontLink;
 
             if (_cache_items_map.size() > _max_size) {
                 auto last = _cache_items_list.end();
@@ -42,12 +43,13 @@ namespace cache {
         }
 
         const value_t& get(const key_t& key) {
-            auto it = _cache_items_map.find(key);
-            if (it == _cache_items_map.end()) {
+            auto mapit = _cache_items_map.find(key);
+            if (mapit == _cache_items_map.end()) {
                 throw std::range_error("There is no such key in cache");
             } else {
-                _cache_items_list.moveToFront(it->second);
-                return it->second->second;
+                list_link_t *link = mapit->second;
+                _cache_items_list.moveToFront(link);
+                return link->data_.second;
             }
         }
 

@@ -15,6 +15,7 @@
 namespace cache {
     template<typename data_t>
     class List {
+    public:
         struct Link {
             Link *next_;
             Link *previous_;
@@ -129,12 +130,12 @@ namespace cache {
         iterator begin() { return iterator(frontLink); }
         iterator end() { return iterator(tailLink); }
 
-        void erase(const iterator position) {
+        void erase(Link* link) {
             if (empty())
                 throw std::runtime_error("erase from empty list");
-            if (position.ptr_ == tailLink)
+            if (link == tailLink)
                 throw std::runtime_error("erase from end of list");
-            Link *temp = position.ptr_;
+            Link *temp = link;
             if (temp->previous_)
                 temp->previous_->next_ = temp->next_;
             assert(temp->next_); //tail is always
@@ -142,6 +143,10 @@ namespace cache {
             if (temp == frontLink)
                 frontLink = temp->next_;
             delete temp;
+        }
+
+        void erase(iterator position) {
+            erase(position.ptr_);
         }
 
         void display() {
@@ -168,10 +173,14 @@ namespace cache {
             assert(newtemp->next_);
         }
 
-        void moveToFront(const iterator position) {
-            data_t data = position.ptr_->data_;
-            erase(position);
+        void moveToFront(Link *link) {
+            data_t data = link->data_;
+            erase(link);
             push_front(data);
+        }
+
+        void moveToFront(const iterator position) {
+            moveToFront(position.ptr_);
         }
     };
 }
