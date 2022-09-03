@@ -9,6 +9,7 @@
 
 #include "murmur.h"
 #include <cstddef>
+#include <vector>
 
 namespace cache {
     template<typename K, typename V>
