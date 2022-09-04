@@ -9,7 +9,8 @@ add_executable(${PROJECT_NAME} lrucache.hpp gtest_lru.cpp
         HashMap.hpp gtest_map.cpp
         murmur.cpp
         gtest_slotlist.cpp SlotList.hpp
-        SlotLRU.hpp gtest_lru2.cpp gtest_smap.cpp)
+        SlotLRU.hpp gtest_lru2.cpp gtest_smap.cpp
+        SlotBits.hpp gtest_bits.cpp)
 
 target_link_libraries(${PROJECT_NAME} gtest gtest_main)
 
@@ -17,4 +18,4 @@ add_executable(test test.cpp lrucache.hpp
         MemInfo.cpp MemInfo.h
         List.hpp LRU.hpp HashMap.hpp
         SlotList.hpp SlotLRU.hpp
-        murmur.cpp  )
+        murmur.cpp SlotBits.hpp)
