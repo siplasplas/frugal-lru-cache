@@ -11,9 +11,19 @@
 
 using namespace std;
 
-const int COUNT = 4*1000*10;
+const int COUNT = 4*1000*1000;
 
 int main() {
+    auto m0a =  mallinfo2();
+    unordered_map<int, int> ma;
+    for (int i=0; i<COUNT; i++) {
+        ma[i]=i;
+    }
+    auto m0b =  mallinfo2();
+    cout << "map" << endl;
+    cout << double(m0b.uordblks-m0a.uordblks)/COUNT <<endl;
+    ma.clear();
+
     auto m1a =  mallinfo2();
     auto *lru_cache = new cache::lru_cache<int, int>(COUNT);
     for (int i=0; i<COUNT; i++) {
