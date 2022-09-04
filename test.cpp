@@ -7,10 +7,11 @@
 #include <malloc.h>
 #include "lrucache.hpp"
 #include "LRU.hpp"
+#include "SlotLRU.hpp"
 
 using namespace std;
 
-const int COUNT = 4*1000*1000;
+const int COUNT = 4*1000*10;
 
 int main() {
     auto m1a =  mallinfo2();
@@ -32,4 +33,14 @@ int main() {
     cout << "with new List class" << endl;
     cout << double(m2b.uordblks-m2a.uordblks)/COUNT <<endl;
     delete LRU;
+
+    auto m3a =  mallinfo2();
+    auto *slotLRU = new cache::SlotLRU<uint16_t, uint16_t, uint16_t>(COUNT);
+    for (int i=0; i<COUNT; i++) {
+        slotLRU->put(i, i);
+    }
+    auto m3b =  mallinfo2();
+    cout << "with slots" << endl;
+    cout << double(m3b.uordblks-m3a.uordblks)/COUNT <<endl;
+    delete slotLRU;
 }
