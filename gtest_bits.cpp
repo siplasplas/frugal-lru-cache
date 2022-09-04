@@ -20,12 +20,12 @@ TEST(SlotBits, SlotPos) {
 TEST(SlotBits, findSlotFrom) {
     typedef uint16_t slot_t;
     SlotBits<slot_t> slb(1023);
-    slb.setOccupiedRange(1, 1023);
-    slb.setAsAvailable(1023);//special case - at end of bitmap
-    slb.setAsAvailable(500);
-    slb.setAsAvailable(502);
-    slb.setAsAvailable(700);
-    slb.setAsAvailable(100);
+    slb.test_setOccupiedRange(1, 1023);
+    slb.test_setAsAvailable(1023);//special case - at end of bitmap
+    slb.test_setAsAvailable(500);
+    slb.test_setAsAvailable(502);
+    slb.test_setAsAvailable(700);
+    slb.test_setAsAvailable(100);
     EXPECT_EQ(slb.findSlotFrom(100),100);
     EXPECT_EQ(slb.findSlotFrom(101),500);
     EXPECT_EQ(slb.findSlotFrom(501),502);
@@ -39,12 +39,12 @@ TEST(SlotBits, findSlotFrom) {
 TEST(SlotBits, findSlotTo) {
     typedef uint16_t slot_t;
     SlotBits<slot_t> slb(1023);
-    slb.setOccupiedRange(1, 1023);
-    slb.setAsAvailable(1023);//special case - at end of bitmap
-    slb.setAsAvailable(500);
-    slb.setAsAvailable(502);
-    slb.setAsAvailable(700);
-    slb.setAsAvailable(100);
+    slb.test_setOccupiedRange(1, 1023);
+    slb.test_setAsAvailable(1023);//special case - at end of bitmap
+    slb.test_setAsAvailable(500);
+    slb.test_setAsAvailable(502);
+    slb.test_setAsAvailable(700);
+    slb.test_setAsAvailable(100);
     EXPECT_EQ(slb.findSlotTo(99),0);
     EXPECT_EQ(slb.findSlotTo(100),0); //without ending range
     EXPECT_EQ(slb.findSlotTo(101),100);
@@ -57,13 +57,13 @@ TEST(SlotBits, findSlotTo) {
 TEST(SlotBits, findNextSlot) {
     typedef uint16_t slot_t;
     SlotBits<slot_t> slb(1023);
-    slb.setOccupiedRange(1, 1023);
+    slb.test_setOccupiedRange(1, 1023);
     EXPECT_EQ(slb.findNextSlot(500),0);
-    slb.setAsAvailable(500);
+    slb.test_setAsAvailable(500);
     EXPECT_EQ(slb.findNextSlot(499),500);
     EXPECT_EQ(slb.findNextSlot(500),0);
     EXPECT_EQ(slb.findNextSlot(501),500);
-    slb.setAsAvailable(1023);
+    slb.test_setAsAvailable(1023);
     EXPECT_EQ(slb.findNextSlot(1022),1023);
     EXPECT_EQ(slb.findNextSlot(1023),500);
     slb.setAsOccupied(500);

@@ -20,6 +20,7 @@ class SlotBits {
     slot_t  numBitWords;
     slot_t capacity;
 public:
+    slot_t availCount;
     static slot_t limit() {
         return std::numeric_limits<slot_t>::max()-bitsInWord;
     }
@@ -35,6 +36,7 @@ public:
         setAsOccupied(0);
         for (slot_t i= capacity + 1; i < numBitWords * bitsInWord; i++)
             setAsOccupied(i);
+        availCount = capacity;
     }
     ~SlotBits(){
         delete bitmask;
@@ -64,16 +66,18 @@ public:
         return posToSlot(p.first, p.second);
     }
     //slow, for test only
-    void setOccupiedRange(slot_t from, slot_t to) {
+    void test_setOccupiedRange(slot_t from, slot_t to) {
         for (slot_t n=from; n<=to; n++)
             setAsOccupied(n);
     }
 
     //for test only
-    void setAsAvailable(slot_t n) {
+    void test_setAsAvailable(slot_t n) {
+        if (isSlotFree(n)) return;
         auto p = slotToPos(n);
-        setBit(bitmask[p.first], p.second);
+        debug_setBit(bitmask[p.first], p.second);
         assert(isSlotFree(n));
+        availCount++;
     }
 
     slot_t findSlotFrom(slot_t n) {
@@ -108,9 +112,24 @@ public:
     }
 
     void setAsOccupied(slot_t n) {
+        if (!isSlotFree(n)) return;
         auto p = slotToPos(n);
         clearBit(bitmask[p.first], p.second);
         assert(!isSlotFree(n));
+        availCount--;
+    }
+
+    void setAsErased(slot_t n){
+        setAsOccupied(n);
+    }
+
+    bool isSlotFree(slot_t n) {
+        auto p = slotToPos(n);
+        return bitIsSet(bitmask[p.first], p.second);
+    }
+
+    bool isSlotOccupied(slot_t n) {
+        return !isSlotFree(n);
     }
 private:
     static slot_t ffs_first(bitType x) {
@@ -136,7 +155,7 @@ private:
     }
 
     //for test only
-    static void setBit(bitType& word, slot_t pos) {
+    static void debug_setBit(bitType& word, slot_t pos) {
         assert(pos > 0 && pos <= bitsInWord);
         bitType mask = (bitType)1 << (pos-1);
         word |= mask;
@@ -148,10 +167,6 @@ private:
         return (word & mask)!=0;
     }
 
-    bool isSlotFree(slot_t n) {
-        auto p = slotToPos(n);
-        return bitIsSet(bitmask[p.first], p.second);
-    }
 };
 
 #endif //CACHE_SLOTBITS_H
