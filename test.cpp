@@ -6,9 +6,9 @@
 #include <forward_list>
 #include <malloc.h>
 #include "lrucache.hpp"
-#include "LRU.hpp"
+#include "experiments/LRU.hpp"
 #include "SlotMap.hpp"
-#include "SlotLRU.hpp"
+#include "experiments/SlotLRU.hpp"
 
 using namespace std;
 
