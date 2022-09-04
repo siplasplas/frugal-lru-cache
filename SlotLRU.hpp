@@ -21,7 +21,7 @@ namespace cache {
     public:
         explicit SlotLRU(size_t max_size) :
                 _max_size(max_size) {
-            _cache_items_list = new SlotList<ptr_t, key_value_pair_t>(max_size+1);
+            _cache_items_list = new SlotList<ptr_t, key_value_pair_t>(max_size+2);
         }
 
         void put(const key_t& key, const value_t& value) {

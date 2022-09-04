@@ -25,6 +25,20 @@ namespace cache {
     public:
         ptr_t frontLink;
         ptr_t tailLink;
+        ptr_t freeList = 0;
+        void toFreeList(ptr_t pos) {
+            arena[pos].next_ = freeList;
+            freeList = pos;
+        }
+
+        //0: error
+        ptr_t fromFreeList() {
+            if (!freeList) return 0;
+            auto old_freeList = freeList;
+            freeList = arena[freeList].next_;
+            return old_freeList;
+        }
+
         ptr_t size() { return heapPos_;}
 
         data_t data(ptr_t slot) {
@@ -56,33 +70,41 @@ namespace cache {
 
         void push_front(data_t data){
             assert(heapPos_>0 && heapPos_<=capacity_);
-            Link &temp = arena[heapPos_];
+            auto newPos = fromFreeList();
+            if (!newPos)
+                newPos = heapPos_;
+            Link &temp = arena[newPos];
             temp.data_ = data;
             temp.next_ = frontLink;
             Link &frontLinkBody = arena[frontLink];
-            frontLinkBody.previous_ = heapPos_;
-            frontLink = heapPos_;
-            heapPos_++;
+            frontLinkBody.previous_ = newPos;
+            frontLink = newPos;
+            if (newPos==heapPos_) heapPos_++;
         }
 
         void pop_front(){
+            assert(frontLink==heapPos_-1);
             ptr_t next = arena[frontLink].next_;
             if (!next && !arena[0].previous_)
                 throw std::runtime_error("pop_front from empty list");
             arena[next].previous_ = 0;
             frontLink = next;
+            heapPos_--;
         }
         void push_back(data_t data) { //insert before tail
-            Link &temp = arena[heapPos_];
+            auto newPos = fromFreeList();
+            if (!newPos)
+                newPos = heapPos_;
+            Link &temp = arena[newPos];
             temp.data_ = data;
             temp.next_ = tailLink;
             ptr_t previous =  arena[tailLink].previous_;
             temp.previous_ = previous;
             Link &frontLinkBody = arena[frontLink];
             if (previous)
-                arena[previous].next_ = heapPos_;
-            arena[tailLink].previous_ = heapPos_;
-            heapPos_++;
+                arena[previous].next_ = newPos;
+            arena[tailLink].previous_ = newPos;
+            if (newPos==heapPos_) heapPos_++;
         }
         void pop_back(){ //remove after tail
             ptr_t temp = arena[tailLink].previous_;
@@ -94,6 +116,7 @@ namespace cache {
             } else
                 frontLink = tailLink;
             arena[tailLink].previous_ = previous;
+            toFreeList(temp);
         }
         void erase(ptr_t pos) {
             if (empty())
@@ -103,15 +126,18 @@ namespace cache {
             ptr_t temp = pos;
             if (arena[temp].previous_)
                 arena[arena[temp].previous_].next_ = arena[temp].next_;
-//            assert(arena[temp].next_); //tail is always
             arena[arena[temp].next_].previous_ = arena[temp].previous_;
             if (temp == frontLink)
                 frontLink = arena[temp].next_;
+            toFreeList(temp);
         }
 
         void insert(const ptr_t pos, data_t data) {
-            ptr_t newtemp = heapPos_;
-            heapPos_++;
+            auto newPos = fromFreeList();
+            if (!newPos)
+                newPos = heapPos_;
+            ptr_t newtemp = newPos;
+            if (newPos==heapPos_) heapPos_++;;
             arena[newtemp].next_ = pos;
             arena[newtemp].data_ = data;
             ptr_t posprevious = arena[pos].previous_;

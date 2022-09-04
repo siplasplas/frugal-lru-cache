@@ -30,7 +30,6 @@ TEST(LRUTest2, KeepsAllValuesWithinCapacity) {
     }
 
     for (int i = 0; i < NUM_OF_TEST2_RECORDS - TEST2_CACHE_CAPACITY; ++i) {
-        printf("i=%d\n",i);
         EXPECT_FALSE(cache_lru.exists(i));
     }
 
