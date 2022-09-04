@@ -69,7 +69,6 @@ namespace cache {
         }
 
         void push_front(data_t data){
-            assert(heapPos_>0 && heapPos_<=capacity_);
             auto newPos = fromFreeList();
             if (!newPos)
                 newPos = heapPos_;
