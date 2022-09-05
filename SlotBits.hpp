@@ -80,8 +80,9 @@ public:
         availCount++;
     }
 
-    slot_t findSlotFrom(slot_t n) {
-        auto p = slotToPos(n);
+    slot_t findSlotFrom(slot_t current) {
+        slot_t from = current+1;
+        auto p = slotToPos(from);
         slot_t bit_in_word = ffs_from(bitmask[p.first], p.second);
         slot_t res = posToSlot(p.first, bit_in_word);
         if (res>0)
@@ -101,13 +102,9 @@ public:
     }
 
     slot_t findNextSlot(slot_t current) {
-        auto p = slotToPos(current);
-        bool lastBit = p.first == numBitWords - 1 && p.second == bitsInWord;
-        if (!lastBit) {
-            slot_t res = findSlotFrom(current+1);
-            assert(res<=0 || res>current);
-            if (res>0) return res;
-        }
+        slot_t res = findSlotFrom(current);
+        assert(res==0 || res>current);
+        if (res>0) return res;
         return findSlotTo(current);
     }
 

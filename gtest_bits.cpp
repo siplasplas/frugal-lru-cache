@@ -26,11 +26,14 @@ TEST(SlotBits, findSlotFrom) {
     slb.test_setAsAvailable(502);
     slb.test_setAsAvailable(700);
     slb.test_setAsAvailable(100);
-    EXPECT_EQ(slb.findSlotFrom(100),100);
+    EXPECT_EQ(slb.findSlotFrom(99),100);
+    EXPECT_EQ(slb.findSlotFrom(100),500);
     EXPECT_EQ(slb.findSlotFrom(101),500);
     EXPECT_EQ(slb.findSlotFrom(501),502);
+    EXPECT_EQ(slb.findSlotFrom(502),700);
     EXPECT_EQ(slb.findSlotFrom(900),1023);
-    EXPECT_EQ(slb.findSlotFrom(1023),1023);
+    EXPECT_EQ(slb.findSlotFrom(1022),1023);
+    EXPECT_EQ(slb.findSlotFrom(1023),0); //not found free slot
     slb.setAsOccupied(1023);
     EXPECT_EQ(slb.findSlotFrom(900),0);
     EXPECT_EQ(slb.findSlotFrom(1023),0);
