@@ -32,7 +32,7 @@ public:
         numBitWords = (capacity + bitsInWord) / bitsInWord; //0 is reserved as null
         bitmask = new bitType[numBitWords];
         for (slot_t i=0; i < numBitWords; i++)
-            bitmask[i] = bitType(-1);
+            bitmask[i] = ~bitType(0);
         setAsOccupied(0);
         for (slot_t i= capacity + 1; i < numBitWords * bitsInWord; i++)
             setAsOccupied(i);
@@ -138,7 +138,7 @@ private:
 
     static slot_t ffs_from(bitType x, slot_t from) {
         assert(from>0 && from <= bitsInWord);
-        bitType mask = bitType(-1) << (from-1);
+        bitType mask = (~bitType(0)) << (from-1);
         return ffsll(x & mask);
     }
 
