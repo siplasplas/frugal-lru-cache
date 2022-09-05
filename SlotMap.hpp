@@ -93,6 +93,39 @@ public:
             ebits->setAsErased(nSlot);
     }
 
+    void printSlotListFrom(slot_t n) {
+        while (n) {
+            K key = slots[n].key;
+            if (startSlot(key)==n)
+                printf("-%d(*%d)", n,key);
+            else
+                printf("-%d(%d)", n,key);
+            n = slots[n].next;
+        }
+    }
+
+    void printSlotLists() {
+        for (int nStart=1; nStart<=capacity; nStart++)
+            printSlotList(nStart);
+    }
+
+    void printSlotList(slot_t nStart) {
+        std::vector<slot_t> prev(capacity + 1);
+        for (int n=1; n<=capacity; n++) {
+            prev[slots[n].next] = n;
+        }
+        printSlotListFrom(nStart);
+        slot_t n = nStart;
+        slot_t n1 = 0;
+        while (n) {
+            n1 = n;
+            n = prev[n];
+        }
+        printf(" whole list: ");
+        printSlotListFrom(n1);
+        printf("\n");
+    }
+
     bool put(K key, V value) {
         auto hash = murmur3_32(&key,sizeof(key));
         slot_t nSlot = (slot_t)(hash % capacity) + 1; //0 is reserved as nullptr
