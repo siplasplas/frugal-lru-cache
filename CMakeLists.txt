@@ -6,7 +6,9 @@ add_definitions("-Werror=return-type")
 add_executable(${PROJECT_NAME} lrucache.hpp gtest_lru.cpp
         murmur.cpp
         gtest_smap.cpp
-        SlotBits.hpp gtest_bits.cpp)
+        SlotBits.hpp gtest_bits.cpp
+        ResizeLogic.hpp BitScanner.h
+        gtest_resize.cpp)
 
 target_link_libraries(${PROJECT_NAME} gtest gtest_main)
 
