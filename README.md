@@ -207,3 +207,37 @@ Planar cache don't need erase single elements, instead of this release
 whole old map.<br>
 This way slot map<int,int> uses only 12.25 bytes per element,
 (0.25 = 2 bits of two bitmaps
+
+#### auto-resizing
+Map should grow if filling ratio reach 80% - 90%.
+Sizes should be 2^n or 1.5*2^n.<br>
+Initial size will 16 slots, 
+sizes forms series: 16,24,32,48,64,96,128...
+If size is eqaul of power of two, it resizes 1.5 times, 
+if size is eqaul of power of two times 1.5, it resizes 
+1.33333... times.
+Resize 1.5 times if filling ratio reach 90% and after
+filling ratio reaches 60%.<br>
+Resize 1.33333... times if filling ratio reach 80% 
+and filling ratio reaches also 60%.<br>
+Another solution is when many elements are created and erased.
+If filling ratio with existing and erase elements reach
+summary respectively 80 and 90 percent of filling ratio,
+this should resize or only rewrite with garbage collection with
+the same size. The same size, if existing elements are less or equal 60%.<br>
+Some situation if size  od power two reach 90%:
+- 90% existing 0% erased -> resize, ratio will 60%
+- 80% existing 10 erased -> resize, ratio will 53.33%
+- 61% existing 29 erased -> resize, ratio will 40.66%
+- 60% existing 30 erased -> don't resize, ratio will 60%
+- 30% existing 60 erased -> don't resize, ratio will 30%
+Default filling ratio after resizing will 60% and minimal 40%;
+if doesn't resize, ratio after garbage collection will be
+- equal percent of existing.
+
+In theoretical situation, when size before resizing is not
+a power of two or 1.5 * power of two, with monimal size = 16, 
+size is treated as nearest power of two or 1.5 * power of two, 
+greater than real size. For example, if size = 17, treated
+is 24 and resize directly to 32. But these situation will quite 
+hypothetical, needed only in test case.
