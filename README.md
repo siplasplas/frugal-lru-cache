@@ -7,7 +7,7 @@ Least Recently Used cache has three main operations:
 - remove element from end of list (if elements reaches limit)
 - operation get() moves element from any place of list to the beginning of list
 
-First operation can be available in any foraward list, but with second, list must be doubly linked.
+First operation can be available in any forward list, but with second, list must be doubly linked.
 Third operation requires random seek to any place of list. Must be implemented with map 
 (map can be unordered). Map has key which is cache key, and value that is doubly linked list iterator.
 
@@ -46,7 +46,7 @@ It too much, especially if values stored in cache are small.
 ### proposal
 We can discard completely list, leaving only map.
 The unordered_map<in,int> has memory requirement near 44 bytes/element.
-This costs somme fuzzing of cache expectations.
+This costs some fuzzing of cache expectations.
 We have planar cache with map for new and old elements. If map for new elements will fill up, 
 we leave old map, new map becomes old and init empty new map.
 This guarantee keep N elements in cache and not guarantee up to 2N.
@@ -200,7 +200,7 @@ after is:
 
 #### erasing
 Erasing is problematic, because one slot can belong to
-muliple lists. Instead of erasing is set bit "erased' in another bitmap,
+multiple lists. Instead of erasing is set bit "erased' in another bitmap,
 and slot is busy until map garbage collector rewrite buffer to
 new buffer the same size or greater size.<br>
 Planar cache don't need erase single elements, instead of this release 
