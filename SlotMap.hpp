@@ -134,6 +134,7 @@ public:
             Slot *slot = findFrom(key, nSlot);
             if (slot) { //replace value
                 slot->value = value;
+                ebits->setAsAvailable(nSlot);
                 return true;
             }
             nSlot2 = bits->findNextSlot(nSlot);
