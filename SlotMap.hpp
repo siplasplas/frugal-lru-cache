@@ -11,10 +11,12 @@
 #include "SlotBits.hpp"
 #include "ResizeLogic.hpp"
 
+template<typename K, typename V>
+using map_pair_t = std::pair<K, V>;
+
 template<typename slot_t, typename K, typename V>
 struct SlotT {
-    K key;
-    V value;
+    map_pair_t<K,V> pair;
     slot_t next;
 };
 
@@ -43,7 +45,7 @@ private:
     slot_t findNFrom(const K key, slot_t nSlot) {
         while (nSlot) {
             Slot &slot = slots[nSlot];
-            if (slot.key==key) return nSlot;
+            if (slot.pair.first==key) return nSlot;
             nSlot = slot.next;
         }
         return 0;
@@ -144,7 +146,7 @@ public:
         if (bits->isSlotOccupied(nSlot)) {
             Slot *slot = findFrom(key, nSlot);
             if (slot) { //replace value
-                slot->value = value;
+                slot->pair.second = value;
                 ebits->setAsAvailable(nSlot);
                 return true;
             }
@@ -156,8 +158,8 @@ public:
         } else
             bits->setAsOccupied(nSlot);
         Slot &slot = slots[nSlot];
-        slot.key = key;
-        slot.value = value;
+        slot.pair.first = key;
+        slot.pair.second = value;
         slot.next = nSlot2;
         counter--;
         return true;
