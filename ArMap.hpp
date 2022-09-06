@@ -18,6 +18,9 @@ class ArMapT {
     void resize() {
         slot_t newCapacity = rl->newCapacity(capacity(), slotMap->erasedCount());
         auto new_slotMap = new SlotMapT<slot_t, K, V>(newCapacity);
+        for (auto p: *slotMap) {
+            new_slotMap->put(p);
+        }
         delete slotMap;
         slotMap = new_slotMap;
     }

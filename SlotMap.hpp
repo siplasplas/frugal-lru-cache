@@ -11,12 +11,9 @@
 #include "SlotBits.hpp"
 #include "ResizeLogic.hpp"
 
-template<typename K, typename V>
-using map_pair_t = std::pair<K, V>;
-
 template<typename slot_t, typename K, typename V>
 struct SlotT {
-    map_pair_t<K,V> pair;
+    std::pair<K,V> pair;
     slot_t next;
 };
 
@@ -27,6 +24,7 @@ public:
     slot_t counter;
     slot_t capacity_;
 private:
+    friend class iterator;
     Slot *slots;
     SlotBits<slot_t> *bits;
     SlotBits<slot_t> *ebits;
@@ -71,6 +69,38 @@ private:
         return (slot_t)(hash % capacity_) + 1;
     }
 
+    bool slotAvail(slot_t nSlot) {
+        return !bits->isSlotFree(nSlot) && ebits->isSlotFree(nSlot);
+    }
+
+public:
+    class iterator : public std::iterator<std::forward_iterator_tag, std::pair<K,V>> {
+        SlotMapT *map;
+        void skipEmpties() {
+            while (nSlot<=map->capacity() && !map->slotAvail(nSlot))
+                nSlot++;
+        }
+    public:
+        slot_t nSlot;
+        iterator(SlotMapT *map, slot_t nSlot) : map(map), nSlot(nSlot) {
+            skipEmpties();
+        }
+        std::pair<K,V> operator*() {   return map->slots[nSlot].pair; }
+        std::pair<K,V>* operator-> () { return &map->slots[nSlot].pair; }
+        iterator& operator++() {
+            nSlot++;
+            skipEmpties();
+            return *this;
+        }
+    };
+    friend bool operator==(const iterator& _x, const iterator& _y) {
+        return _x.nSlot == _y.nSlot ;
+    }
+
+    friend bool operator!=(const iterator& _x, const iterator& _y) {
+        return _x.nSlot != _y.nSlot;
+    }
+
 public:
     explicit SlotMapT(slot_t capacity): capacity_(capacity) {
         bits = new SlotBits<slot_t>(capacity);
@@ -84,6 +114,15 @@ public:
         delete ebits;
         delete bits;
     }
+
+    iterator begin() {
+        return iterator(this, 0);
+    }
+
+    iterator end() {
+        return iterator(this, capacity_+1);
+    }
+
 
     slot_t capacity() {
         return capacity_;
@@ -137,6 +176,10 @@ public:
         printf(" whole list: ");
         printSlotListFrom(n1);
         printf("\n");
+    }
+
+    bool put(std::pair<K,V> pair) {
+        return put(pair.first, pair.second);
     }
 
     bool put(K key, V value) {
