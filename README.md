@@ -241,3 +241,6 @@ size is treated as nearest power of two or 1.5 * power of two,
 greater than real size. For example, if size = 17, treated
 is 24 and resize directly to 32. But these situation will quite 
 hypothetical, needed only in test case.
+
+#### simple auto-resizing
+Only powers of two are allowed as capacity.

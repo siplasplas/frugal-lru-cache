@@ -6,6 +6,9 @@
 #define CACHE_FRUGALRESIZER_HPP
 
 #include "BitScanner.h"
+#include <utility>
+#include <cassert>
+#include <stdexcept>
 
 class FrugalResizer {
     const int64_t MinSize;
@@ -41,7 +44,7 @@ public:
     }
 
     /* capacity  is signed to avoid error converting
-     * negative number to huge positive and creating huge couner */
+     * negative number to huge positive and creating huge counter */
     static int64_t initCounter(int64_t capacity) {
         if (capacity<=0) throw std::range_error("capacity must be positive");
         if (capacity>=0x20000000000000) throw std::range_error("too large capacity");
@@ -60,7 +63,7 @@ public:
         int kind = p.second;
         assert(kind==2 || kind==3);
         long double limitCoeff = kind==2? 0.3L : 0.2L;
-        if (erased>(int64_t)(limitCoeff*p.first))
+        if (erased > (int64_t)(limitCoeff*p.first))
             return p.first;
         else
             return grow(p);
