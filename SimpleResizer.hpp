@@ -6,11 +6,12 @@
 #define CACHE_SIMPLERESIZER_HPP
 
 #include "BitScanner.h"
+#include "IResizer.h"
 #include <utility>
 #include <cassert>
 #include <stdexcept>
 
-class SimpleResizer {
+class SimpleResizer : public IResizer {
     const int64_t MinSize;
     static int64_t toBaseSizeEx(int64_t size, int64_t MinSize) {
         if (size<MinSize) size = MinSize;
@@ -31,13 +32,13 @@ class SimpleResizer {
 public:
     explicit SimpleResizer(int64_t MinSize) : MinSize(MinSize) {}
 
-    int64_t toBaseSize(int64_t size) {
+    int64_t toBaseSize(int64_t size) override{
         return toBaseSizeEx(size, MinSize);
     }
 
     /* capacity  is signed to avoid error converting
      * negative number to huge positive and creating huge counter */
-    static int64_t initCounter(int64_t capacity) {
+    int64_t initCounter(int64_t capacity) override {
         if (capacity<=0) throw std::range_error("capacity must be positive");
         if (capacity>=0x20000000000000) throw std::range_error("too large capacity");
         long double limitCoeff = 0.9L;
@@ -46,7 +47,7 @@ public:
         return result;
     }
 
-    int64_t newCapacity(int64_t capacity, int64_t erased) {
+    int64_t newCapacity(int64_t capacity, int64_t erased) override {
         if (capacity<=0) throw std::range_error("capacity must be positive");
         if (capacity>=0x20000000000000) throw std::range_error("too large capacity");
         int64_t baseSize = toBaseSizeEx(capacity,MinSize);

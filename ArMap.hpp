@@ -17,7 +17,7 @@ class ArMapT {
 
     void resize() {
         slot_t newCapacity = rl->newCapacity(capacity(), slotMap->erasedCount());
-        auto new_slotMap = new SlotMapT<slot_t, K, V>(newCapacity);
+        auto new_slotMap = new SlotMapT<slot_t, K, V>(newCapacity, rl->initCounter(newCapacity));
         for (auto p: *slotMap) {
             new_slotMap->put(p);
         }
@@ -29,7 +29,7 @@ public:
     using Slot = SlotT<slot_t, K, V>;
     ArMapT() {
         rl = new FrugalResizer(MinSize);
-        slotMap = new SlotMapT<slot_t, K, V>(MinSize);
+        slotMap = new SlotMapT<slot_t, K, V>(MinSize, rl->initCounter(MinSize));
     }
     ~ArMapT() {
         delete slotMap;

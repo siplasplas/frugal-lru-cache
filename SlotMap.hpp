@@ -102,11 +102,10 @@ public:
     }
 
 public:
-    explicit SlotMapT(slot_t capacity): capacity_(capacity) {
+    explicit SlotMapT(slot_t capacity, slot_t counter): capacity_(capacity), counter(counter) {
         bits = new SlotBits<slot_t>(capacity);
         ebits = new SlotBits<slot_t>(capacity);
         slots = new Slot[capacity + 1];
-        counter = (slot_t)(FrugalResizer::initCounter(capacity));
     }
 
     ~SlotMapT() {

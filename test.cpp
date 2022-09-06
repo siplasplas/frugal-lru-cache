@@ -28,7 +28,7 @@ int main() {
     delete lru_cache;
 
     auto m0a =  mallinfo2();
-    auto *ma = new SlotMap<int,int>(COUNT);
+    auto *ma = new SlotMap<int,int>(COUNT,COUNT);
     for (int i=0; i<COUNT; i++)
         ma->put(i,i);
 

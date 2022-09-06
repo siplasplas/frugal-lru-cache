@@ -7,7 +7,7 @@ using namespace std;
 
 TEST(SlotMap, Add) {
     unordered_map<int, int> map;
-    SlotMap<int, int> smap(1000);
+    SlotMap<int, int> smap(1000, 1000);
     EXPECT_EQ(map.size(), 0);
     EXPECT_EQ(smap.size(), 0);
     map[1]= 1000;
@@ -26,7 +26,7 @@ TEST(SlotMap, Add) {
 
 TEST(SlotMap, Find) {
     unordered_map<int, int> map;
-    SlotMap<int, int> smap(1000);
+    SlotMap<int, int> smap(1000, 100);
     EXPECT_EQ(map.size(), 0);
     EXPECT_EQ(smap.size(), 0);
     map[1]= 1000;
@@ -54,7 +54,7 @@ TEST(SlotMap, Find) {
 TEST(SlotMap, Erase1) {
     for (int i=0; i<100; i++)
     {
-        SlotMap<int, int> smap(20);
+        SlotMap<int, int> smap(20,20);
         for (int j=0; j<20; j++)
             smap.put(i+j,i+j);
         for (int j=0; j<20; j++)
@@ -71,7 +71,7 @@ TEST(SlotMap, Erase1) {
 
 TEST(SlotMap, Erase) {
     unordered_map<int, int> map;
-    SlotMap<int, int> smap(1000);
+    SlotMap<int, int> smap(1000,1000);
     EXPECT_EQ(map.size(), 0);
     EXPECT_EQ(smap.size(), 0);
     map[1]= 1000;
