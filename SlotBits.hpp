@@ -73,7 +73,7 @@ public:
     }
 
     //for test only
-    void test_setAsAvailable(slot_t n) {
+    void setAsAvailable(slot_t n) {
         if (isSlotFree(n)) return;
         auto p = slotToPos(n);
         debug_setBit(bitmask[p.first], p.second);
