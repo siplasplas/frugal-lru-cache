@@ -11,7 +11,7 @@
 #include "SlotBits.hpp"
 
 template<typename slot_t, typename K, typename V>
-class  SlotMapT {
+class SlotMapT {
     struct Slot {
         K key;
         V value;
