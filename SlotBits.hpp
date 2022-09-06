@@ -21,6 +21,7 @@ class SlotBits {
     slot_t capacity;
 public:
     slot_t availCount;
+
     static slot_t limit() {
         return std::numeric_limits<slot_t>::max()-bitsInWord;
     }
@@ -114,6 +115,10 @@ public:
         clearBit(bitmask[p.first], p.second);
         assert(!isSlotFree(n));
         availCount--;
+    }
+
+    slot_t erasedCount() {
+        return capacity-availCount;
     }
 
     void setAsErased(slot_t n){
