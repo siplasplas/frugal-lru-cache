@@ -233,7 +233,7 @@ Some situation if size  od power two reach 90%:
 - 30% existing 60 erased -> don't resize, ratio will 30%
 Default filling ratio after resizing will 60% and minimal 40%;
 if doesn't resize, ratio after garbage collection will be
-- equal percent of existing.
+equal to percent of existing.
 
 In theoretical situation, when size before resizing is not
 a power of two or 1.5 * power of two, with monimal size = 16, 
