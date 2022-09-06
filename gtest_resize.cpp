@@ -48,3 +48,47 @@ TEST(ResizeLogic, toBaseSize) {
         }
     }
 }
+
+TEST(ResizeLogic, initCounter) {
+    ResizeLogic rl(16);//no matter in this method
+    EXPECT_THROW(rl.initCounter(0), std::range_error);
+    EXPECT_EQ(rl.initCounter(1), 1);//must be >0
+    EXPECT_EQ(rl.initCounter(2), 1);//else round down
+    EXPECT_EQ(rl.initCounter(3), 2);
+    EXPECT_EQ(rl.initCounter(4), 3);
+    EXPECT_EQ(rl.initCounter(5), 4);
+    EXPECT_EQ(rl.initCounter(6), 4);
+    EXPECT_EQ(rl.initCounter(7), 6);//90%
+    EXPECT_EQ(rl.initCounter(8), 7);
+    EXPECT_EQ(rl.initCounter(12), 9);
+    EXPECT_EQ(rl.initCounter(16), 14);
+    EXPECT_EQ(rl.initCounter(95), 76);
+    EXPECT_EQ(rl.initCounter(96), 76);
+    EXPECT_EQ(rl.initCounter(97), 87);
+    EXPECT_EQ(rl.initCounter(100), 90);
+    EXPECT_EQ(rl.initCounter(128), 115);
+    EXPECT_EQ(rl.initCounter(1628413597910449), 1302730878328359);//7^18 for round errors
+    EXPECT_EQ(rl.initCounter(905824306333433), 815241875700089); //137^7
+    EXPECT_THROW(rl.initCounter(15134080077243536), std::range_error);
+}
+
+TEST(ResizeLogic, newCapacity) {
+    ResizeLogic rl(16);
+
+    EXPECT_EQ(rl.newCapacity(10,9), 16);//minimal resize
+
+    EXPECT_EQ(rl.newCapacity(128,0), 192);
+    EXPECT_EQ(rl.newCapacity(128,128), 128);
+    EXPECT_EQ(rl.newCapacity(192,0), 256);
+    EXPECT_EQ(rl.newCapacity(192,192), 192);
+
+    EXPECT_EQ(rl.newCapacity(96,0), 128);
+    EXPECT_EQ(rl.newCapacity(96,19), 128);
+    EXPECT_EQ(rl.newCapacity(96,20), 96);
+
+    EXPECT_EQ(rl.newCapacity(1024,0), 1536);
+    EXPECT_EQ(rl.newCapacity(1024,100), 1536);
+    EXPECT_EQ(rl.newCapacity(1024,307), 1536);
+    EXPECT_EQ(rl.newCapacity(1024,308), 1024);
+    EXPECT_EQ(rl.newCapacity(1024,900), 1024);
+}
