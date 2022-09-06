@@ -24,6 +24,15 @@ class ResizeLogic {
         else
             return std::make_pair(3L << (bitpos-1), 3);
     }
+
+    int64_t grow(const std::pair<int64_t, int> &p) {
+        if (p.second==2)
+            return p.first + p.first/2;
+        else {
+            int bitpos = BitScanner::BitScanReverse(p.first);
+            return 1L << (bitpos+1);
+        }
+    }
 public:
     explicit ResizeLogic(int64_t MinSize) : MinSize(MinSize) {}
 
@@ -42,15 +51,6 @@ public:
         auto result = (int64_t)(limitCoeff*capacity);
         if (result<1) result = 1;
         return result;
-    }
-
-    int64_t grow(const std::pair<int64_t, int> &p) {
-        if (p.second==2)
-            return p.first + p.first/2;
-        else {
-            int bitpos = BitScanner::BitScanReverse(p.first);
-            return 1L << (bitpos+1);
-        }
     }
 
     int64_t newCapacity(int64_t capacity, int64_t erased) {
