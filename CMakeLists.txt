@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.13)
-project(gtest_lru)
+project(gtest_cache)
 
 add_definitions("-Werror=return-type")
 
