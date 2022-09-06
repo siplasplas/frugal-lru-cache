@@ -9,6 +9,7 @@
 #include <iostream>
 #include "murmur.h"
 #include "SlotBits.hpp"
+#include "ResizeLogic.hpp"
 
 template<typename slot_t, typename K, typename V>
 struct SlotT {
@@ -19,8 +20,11 @@ struct SlotT {
 
 template<typename slot_t, typename K, typename V>
 class SlotMapT {
+public:
     using Slot = SlotT<slot_t, K, V>;
-    slot_t capacity;
+    slot_t counter;
+    slot_t capacity_;
+private:
     Slot *slots;
     SlotBits<slot_t> *bits;
     SlotBits<slot_t> *ebits;
@@ -62,20 +66,25 @@ class SlotMapT {
 
     slot_t startSlot(const K key) {
         auto hash = murmur3_32(&key,sizeof(key));
-        return (slot_t)(hash % capacity) + 1;
+        return (slot_t)(hash % capacity_) + 1;
     }
 
 public:
-    explicit SlotMapT(slot_t capacity): capacity(capacity) {
+    explicit SlotMapT(slot_t capacity): capacity_(capacity) {
         bits = new SlotBits<slot_t>(capacity);
         ebits = new SlotBits<slot_t>(capacity);
         slots = new Slot[capacity + 1];
+        counter = (slot_t)(ResizeLogic::initCounter(capacity));
     }
 
     ~SlotMapT() {
         delete []slots;
         delete ebits;
         delete bits;
+    }
+
+    slot_t capacity() {
+        return capacity_;
     }
 
     slot_t size() {
@@ -130,7 +139,7 @@ public:
 
     bool put(K key, V value) {
         auto hash = murmur3_32(&key,sizeof(key));
-        slot_t nSlot = (slot_t)(hash % capacity) + 1; //0 is reserved as nullptr
+        slot_t nSlot = (slot_t)(hash % capacity_) + 1; //0 is reserved as nullptr
         slot_t nSlot2 = 0;
         if (bits->isSlotOccupied(nSlot)) {
             Slot *slot = findFrom(key, nSlot);
@@ -150,6 +159,7 @@ public:
         slot.key = key;
         slot.value = value;
         slot.next = nSlot2;
+        counter--;
         return true;
     }
 
@@ -169,6 +179,10 @@ public:
             }
         }
         printf("average %f\n",double(sum)/count);
+    }
+
+    slot_t erasedCount() {
+        return ebits->erasedCount();
     }
 };
 
