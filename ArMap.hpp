@@ -8,12 +8,12 @@
 
 #include "SlotMap.hpp"
 #include "FrugalResizer.hpp"
+#include "SimpleResizer.hpp"
 
 template<typename slot_t, typename K, typename V>
 class ArMapT {
-    const static slot_t MinSize = 16;
     SlotMapT<slot_t, K, V> *slotMap;
-    FrugalResizer *rl;
+    IResizer *rl;
 
     void resize() {
         slot_t newCapacity = rl->newCapacity(capacity(), slotMap->erasedCount());
@@ -26,9 +26,13 @@ class ArMapT {
     }
 
 public:
+    enum ResizerEnum {reSimple, reFrugal};
     using Slot = SlotT<slot_t, K, V>;
-    ArMapT() {
-        rl = new FrugalResizer(MinSize);
+    ArMapT(slot_t MinSize = 16, ResizerEnum resizerEnum = reFrugal) {
+        if (resizerEnum == reFrugal)
+            rl = new FrugalResizer(MinSize);
+        else
+            rl = new SimpleResizer(MinSize);
         slotMap = new SlotMapT<slot_t, K, V>(MinSize, rl->initCounter(MinSize));
     }
     ~ArMapT() {
