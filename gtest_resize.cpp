@@ -2,14 +2,14 @@
 // Created by Andrzej Borucki on 2022-09-05
 //
 #include "gtest/gtest.h"
-#include "ResizeLogic.hpp"
+#include "FrugalResizer.hpp"
 #include <algorithm>
 
 using namespace std;
 
-TEST(ResizeLogic, toBaseSize) {
+TEST(FrugalResizer, toBaseSize) {
     for (size_t kk=0; kk<=32; kk+=8) {
-        ResizeLogic rl(kk);
+        FrugalResizer rl(kk);
         size_t n = 1;
         size_t n3 = 0L;
         size_t maxn = 1L << 52;
@@ -49,8 +49,8 @@ TEST(ResizeLogic, toBaseSize) {
     }
 }
 
-TEST(ResizeLogic, initCounter) {
-    ResizeLogic rl(16);//no matter in this method
+TEST(FrugalResizer, initCounter) {
+    FrugalResizer rl(16);//no matter in this method
     EXPECT_THROW(rl.initCounter(0), std::range_error);
     EXPECT_EQ(rl.initCounter(1), 1);//must be >0
     EXPECT_EQ(rl.initCounter(2), 1);//else round down
@@ -68,12 +68,12 @@ TEST(ResizeLogic, initCounter) {
     EXPECT_EQ(rl.initCounter(100), 90);
     EXPECT_EQ(rl.initCounter(128), 115);
     EXPECT_EQ(rl.initCounter(1628413597910449), 1302730878328359);//7^18 for round errors
-    EXPECT_EQ(rl.initCounter(905824306333433), 815241875700089); //137^7
+    EXPECT_EQ(rl.initCounter(905824306333433), 815241875700089); //137^7 as any big number
     EXPECT_THROW(rl.initCounter(15134080077243536), std::range_error);
 }
 
-TEST(ResizeLogic, newCapacity) {
-    ResizeLogic rl(16);
+TEST(FrugalResizer, newCapacity) {
+    FrugalResizer rl(16);
 
     EXPECT_EQ(rl.newCapacity(10,9), 16);//minimal resize
 

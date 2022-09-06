@@ -7,7 +7,7 @@ add_executable(${PROJECT_NAME} lrucache.hpp gtest_lru.cpp
         murmur.cpp
         gtest_smap.cpp
         SlotBits.hpp gtest_bits.cpp
-        ResizeLogic.hpp BitScanner.h
+        FrugalResizer.hpp BitScanner.h
         gtest_resize.cpp ArMap.hpp gtest_armap.cpp)
 
 target_link_libraries(${PROJECT_NAME} gtest gtest_main)

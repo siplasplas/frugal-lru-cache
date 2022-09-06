@@ -9,7 +9,7 @@
 #include <iostream>
 #include "murmur.h"
 #include "SlotBits.hpp"
-#include "ResizeLogic.hpp"
+#include "FrugalResizer.hpp"
 
 template<typename slot_t, typename K, typename V>
 struct SlotT {
@@ -106,7 +106,7 @@ public:
         bits = new SlotBits<slot_t>(capacity);
         ebits = new SlotBits<slot_t>(capacity);
         slots = new Slot[capacity + 1];
-        counter = (slot_t)(ResizeLogic::initCounter(capacity));
+        counter = (slot_t)(FrugalResizer::initCounter(capacity));
     }
 
     ~SlotMapT() {

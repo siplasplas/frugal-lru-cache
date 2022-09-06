@@ -7,13 +7,13 @@
 #define ARMAP_HPP
 
 #include "SlotMap.hpp"
-#include "ResizeLogic.hpp"
+#include "FrugalResizer.hpp"
 
 template<typename slot_t, typename K, typename V>
 class ArMapT {
     const static slot_t MinSize = 16;
     SlotMapT<slot_t, K, V> *slotMap;
-    ResizeLogic *rl;
+    FrugalResizer *rl;
 
     void resize() {
         slot_t newCapacity = rl->newCapacity(capacity(), slotMap->erasedCount());
@@ -28,7 +28,7 @@ class ArMapT {
 public:
     using Slot = SlotT<slot_t, K, V>;
     ArMapT() {
-        rl = new ResizeLogic(MinSize);
+        rl = new FrugalResizer(MinSize);
         slotMap = new SlotMapT<slot_t, K, V>(MinSize);
     }
     ~ArMapT() {

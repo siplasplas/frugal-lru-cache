@@ -2,12 +2,12 @@
 // Created by Andrzej Borucki on 2022-09-05
 //
 
-#ifndef CACHE_RESIZELOGIC_H
-#define CACHE_RESIZELOGIC_H
+#ifndef CACHE_FRUGALRESIZER_HPP
+#define CACHE_FRUGALRESIZER_HPP
 
 #include "BitScanner.h"
 
-class ResizeLogic {
+class FrugalResizer {
     const int64_t MinSize;
     static std::pair<int64_t,int> toBaseSizeEx(int64_t size, int64_t MinSize) {
         if (size<MinSize) size = MinSize;
@@ -34,7 +34,7 @@ class ResizeLogic {
         }
     }
 public:
-    explicit ResizeLogic(int64_t MinSize) : MinSize(MinSize) {}
+    explicit FrugalResizer(int64_t MinSize) : MinSize(MinSize) {}
 
     int64_t toBaseSize(int64_t size) {
         return toBaseSizeEx(size, MinSize).first;
@@ -68,4 +68,4 @@ public:
 };
 
 
-#endif //CACHE_RESIZELOGIC_H
+#endif //CACHE_FRUGALRESIZER_HPP
