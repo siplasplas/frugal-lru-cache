@@ -54,10 +54,10 @@ More predictable is to have more maps, for example 4 or 6, but the more maps, th
 for get old elements, while get new elements still fast. Number of planes will be parameter.
 Since 64 bit of pointers is too much, next proposal is resignation from pointers and 
 instead of this use index in one large array.<br>
-Array has elements named slots. Slot 0 is reserved because index 0 means here 'null pointer'.<br>
+Array has elements named slots. SlotT 0 is reserved because index 0 means here 'null pointer'.<br>
 Map slot is:
 ```cpp
-struct Slot {
+struct SlotT {
     K key;
     V value;
     slot_t next;

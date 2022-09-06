@@ -11,13 +11,15 @@
 #include "SlotBits.hpp"
 
 template<typename slot_t, typename K, typename V>
-class SlotMapT {
-    struct Slot {
-        K key;
-        V value;
-        slot_t next;
-    };
+struct SlotT {
+    K key;
+    V value;
+    slot_t next;
+};
 
+template<typename slot_t, typename K, typename V>
+class SlotMapT {
+    using Slot = SlotT<slot_t, K, V>;
     slot_t capacity;
     Slot *slots;
     SlotBits<slot_t> *bits;
@@ -58,6 +60,11 @@ class SlotMapT {
         return findNFrom(key, startSlot(key));
     }
 
+    slot_t startSlot(const K key) {
+        auto hash = murmur3_32(&key,sizeof(key));
+        return (slot_t)(hash % capacity) + 1;
+    }
+
 public:
     explicit SlotMapT(slot_t capacity): capacity(capacity) {
         bits = new SlotBits<slot_t>(capacity);
@@ -73,11 +80,6 @@ public:
 
     slot_t size() {
         return ebits->availCount-bits->availCount;
-    }
-
-    slot_t startSlot(const K key) {
-        auto hash = murmur3_32(&key,sizeof(key));
-        return (slot_t)(hash % capacity) + 1;
     }
 
     Slot* find(const K key) {
