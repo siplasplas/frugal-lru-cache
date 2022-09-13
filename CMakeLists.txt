@@ -11,7 +11,8 @@ add_executable(${PROJECT_NAME} lrucache.hpp gtest_lru.cpp
         gtest_fresizer.cpp gtest_sresizer.cpp
         ArMap.hpp gtest_armap.cpp SimpleResizer.hpp
         IResizer.h
-        HashMap.hpp gtest_hmap.cpp)
+        HashMap.hpp gtest_hmap.cpp
+        BaseMap.h BaseHashMap.hpp)
 
 target_link_libraries(${PROJECT_NAME} gtest gtest_main)
 

@@ -10,6 +10,7 @@
 #include <cstring>
 #include <cassert>
 #include "murmur.h"
+#include "BaseHashMap.hpp"
 
 template<typename K, typename V>
 struct SlotM {
@@ -19,18 +20,21 @@ struct SlotM {
 
 
 template<typename K, typename V>
-class HashMap {
+class HashMap: public BaseHashMap<K,V> {
 public:
     uint32_t counter;
-private:
-    uint32_t capacity_;
+protected:
     uint32_t size_ = 0;
-    friend class iterator;
     using Slot = SlotM<K, V>;
     using PSlot = Slot*;
     PSlot *slots;
+protected:
+    void skipEmpties(typename BaseHashMap<K,V>::iterator *it) override {
+    }
+    void increaseIt(typename BaseHashMap<K,V>::iterator *it) override {
+    }
 public:
-    HashMap(uint32_t capacity, uint32_t counter): capacity_(capacity), counter(counter) {
+    HashMap(uint32_t capacity, uint32_t counter): BaseHashMap<K, V>(capacity,counter) {
         slots = new PSlot[capacity + 1];
         memset(slots,0, sizeof(PSlot)*(capacity + 1));
     }
@@ -39,7 +43,7 @@ public:
     };
     uint32_t startSlot(const K key) {
         auto hash = murmur3_32(&key,sizeof(key));
-        return (uint32_t)(hash % capacity_) + 1;
+        return (uint32_t)(hash % BaseHashMap<K,V>::capacity()) + 1;
     }
     bool put(std::pair<K,V> pair) {
         return put(pair.first, pair.second);
@@ -69,7 +73,7 @@ public:
         }
     }
     void clear() {
-        for (uint32_t i=1; i<=capacity_; i++)
+        for (uint32_t i=1; i<=BaseHashMap<K,V>::capacity_; i++)
             deleteSlot(i);
     }
 

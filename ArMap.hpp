@@ -10,14 +10,14 @@
 #include "FrugalResizer.hpp"
 #include "SimpleResizer.hpp"
 
-template<typename slot_t, typename K, typename V>
-class ArMapT {
-    SlotMapT<slot_t, K, V> *slotMap;
+template<typename K, typename V>
+class ArMap {
+    SlotMap<K, V> *slotMap;
     IResizer *rl;
 
     void resize() {
         slot_t newCapacity = rl->newCapacity(capacity(), slotMap->erasedCount());
-        auto new_slotMap = new SlotMapT<slot_t, K, V>(newCapacity, rl->initCounter(newCapacity));
+        auto new_slotMap = new SlotMap<K, V>(newCapacity, rl->initCounter(newCapacity));
         for (auto p: *slotMap) {
             new_slotMap->put(p);
         }
@@ -27,15 +27,15 @@ class ArMapT {
 
 public:
     enum ResizerEnum {reSimple, reFrugal};
-    using Slot = SlotT<slot_t, K, V>;
-    ArMapT(slot_t MinSize = 16, ResizerEnum resizerEnum = reFrugal) {
+    using Slot = SlotT<K, V>;
+    ArMap(slot_t MinSize = 16, ResizerEnum resizerEnum = reFrugal) {
         if (resizerEnum == reFrugal)
             rl = new FrugalResizer(MinSize);
         else
             rl = new SimpleResizer(MinSize);
-        slotMap = new SlotMapT<slot_t, K, V>(MinSize, rl->initCounter(MinSize));
+        slotMap = new SlotMap<K, V>(MinSize, rl->initCounter(MinSize));
     }
-    ~ArMapT() {
+    ~ArMap() {
         delete slotMap;
         delete rl;
     }
@@ -62,8 +62,5 @@ public:
         slotMap->erase(key);
     }
 };
-
-template<typename K, typename V> using ArMap = ArMapT<uint32_t, K,V>;
-template<typename K, typename V> using ArMap16 = ArMapT<uint16_t, K,V>;
 
 #endif //ARMAP_HPP

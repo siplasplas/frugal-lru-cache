@@ -10,21 +10,32 @@
 #include "murmur.h"
 #include "SlotBits.hpp"
 #include "FrugalResizer.hpp"
+#include "BaseHashMap.hpp"
 
-template<typename slot_t, typename K, typename V>
-struct SlotT {
-    std::pair<K,V> pair;
+template<typename K, typename V>
+struct SlotT: BaseSlot<K,V> {
     slot_t next;
 };
 
-template<typename slot_t, typename K, typename V>
-class SlotMapT {
-public:
-    slot_t counter;
+template<typename K, typename V>
+class SlotMap : public BaseHashMap<K,V> {
+protected:
+    void skipEmpties(typename BaseHashMap<K,V>::iterator *it) override {
+        slot_t nSlot = it->nSlot;
+        while (nSlot <= BaseHashMap<K,V>::capacity_ && !slotUsed(nSlot))
+            nSlot++;
+        it->nSlot = nSlot;
+        if (it->nSlot<=BaseHashMap<K,V>::capacity_)
+            it->slot = &slots[it->nSlot];
+        else
+            it->slot = nullptr;
+    }
+    void increaseIt(typename BaseHashMap<K,V>::iterator *it) override {
+        it->nSlot++;
+        skipEmpties(it);
+    }
 private:
-    using Slot = SlotT<slot_t, K, V>;
-    slot_t capacity_;
-    friend class iterator;
+    using Slot = SlotT<K, V>;
     Slot *slots;
     SlotBits<slot_t> *bits;
     SlotBits<slot_t> *ebits;
@@ -66,65 +77,23 @@ private:
 
     slot_t startSlot(const K key) {
         auto hash = murmur3_32(&key,sizeof(key));
-        return (slot_t)(hash % capacity_) + 1;
+        return (slot_t)(hash % BaseHashMap<K,V>::capacity_) + 1;
     }
 
-    bool slotAvail(slot_t nSlot) {
+    bool slotUsed(slot_t nSlot) {
         return !bits->isSlotFree(nSlot) && ebits->isSlotFree(nSlot);
     }
-
 public:
-    class iterator : public std::iterator<std::forward_iterator_tag, std::pair<K,V>> {
-        SlotMapT *map;
-        void skipEmpties() {
-            while (nSlot<=map->capacity() && !map->slotAvail(nSlot))
-                nSlot++;
-        }
-    public:
-        slot_t nSlot;
-        iterator(SlotMapT *map, slot_t nSlot) : map(map), nSlot(nSlot) {
-            skipEmpties();
-        }
-        std::pair<K,V> operator*() {   return map->slots[nSlot].pair; }
-        std::pair<K,V>* operator-> () { return &map->slots[nSlot].pair; }
-        iterator& operator++() {
-            nSlot++;
-            skipEmpties();
-            return *this;
-        }
-    };
-    friend bool operator==(const iterator& _x, const iterator& _y) {
-        return _x.nSlot == _y.nSlot ;
-    }
-
-    friend bool operator!=(const iterator& _x, const iterator& _y) {
-        return _x.nSlot != _y.nSlot;
-    }
-
-public:
-    SlotMapT(slot_t capacity, slot_t counter): capacity_(capacity), counter(counter) {
+    SlotMap(slot_t capacity, slot_t counter): BaseHashMap<K, V>(capacity, counter) {
         bits = new SlotBits<slot_t>(capacity);
         ebits = new SlotBits<slot_t>(capacity);
         slots = new Slot[capacity + 1];
     }
 
-    ~SlotMapT() {
+    ~SlotMap() {
         delete []slots;
         delete ebits;
         delete bits;
-    }
-
-    iterator begin() {
-        return iterator(this, 0);
-    }
-
-    iterator end() {
-        return iterator(this, capacity_+1);
-    }
-
-
-    slot_t capacity() {
-        return capacity_;
     }
 
     slot_t size() {
@@ -156,13 +125,13 @@ public:
     }
 
     void printSlotLists() {
-        for (int nStart=1; nStart<=capacity_; nStart++)
+        for (int nStart=1; nStart<=BaseHashMap<K,V>::capacity_; nStart++)
             printSlotList(nStart);
     }
 
     void printSlotList(slot_t nStart) {
-        std::vector<slot_t> prev(capacity_ + 1);
-        for (int n=1; n<=capacity_; n++) {
+        std::vector<slot_t> prev(BaseHashMap<K,V>::capacity_ + 1);
+        for (int n=1; n<=BaseHashMap<K,V>::capacity_; n++) {
             prev[slots[n].next] = n;
         }
         printSlotListFrom(nStart);
@@ -202,20 +171,20 @@ public:
         slot.pair.first = key;
         slot.pair.second = value;
         slot.next = nSlot2;
-        counter--;
+        BaseHashMap<K,V>::counter--;
         return true;
     }
 
     void printStat() {
         slot_t maxlen = 0;
-        for (slot_t i=0; i < capacity_; i++)
+        for (slot_t i=0; i < BaseHashMap<K,V>::capacity_; i++)
             maxlen = std::max(maxlen, stat_slotlen(i));
         std::vector<slot_t> hist(maxlen+1);
-        for (slot_t i=0; i < capacity_; i++)
+        for (slot_t i=0; i < BaseHashMap<K,V>::capacity_; i++)
             hist[stat_slotlen(i)]++;
         slot_t sum = 0, count = 0;
         for (slot_t i=0; i<hist.size(); i++) {
-            printf("%d: %f\n", i, double(hist[i]) / capacity_);
+            printf("%d: %f\n", i, double(hist[i]) / BaseHashMap<K,V>::capacity_);
             if (i>0) {
                 sum += i * hist[i];
                 count+=hist[i];
@@ -228,8 +197,5 @@ public:
         return ebits->erasedCount();
     }
 };
-
-template<typename K, typename V> using SlotMap = SlotMapT<uint32_t, K,V>;
-template<typename K, typename V> using SlotMap16 = SlotMapT<uint16_t, K,V>;
 
 #endif //CACHE_SLOTMAP_HPP
