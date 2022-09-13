@@ -20,10 +20,10 @@ struct SlotT {
 template<typename slot_t, typename K, typename V>
 class SlotMapT {
 public:
-    using Slot = SlotT<slot_t, K, V>;
     slot_t counter;
-    slot_t capacity_;
 private:
+    using Slot = SlotT<slot_t, K, V>;
+    slot_t capacity_;
     friend class iterator;
     Slot *slots;
     SlotBits<slot_t> *bits;
@@ -102,7 +102,7 @@ public:
     }
 
 public:
-    explicit SlotMapT(slot_t capacity, slot_t counter): capacity_(capacity), counter(counter) {
+    SlotMapT(slot_t capacity, slot_t counter): capacity_(capacity), counter(counter) {
         bits = new SlotBits<slot_t>(capacity);
         ebits = new SlotBits<slot_t>(capacity);
         slots = new Slot[capacity + 1];
@@ -156,13 +156,13 @@ public:
     }
 
     void printSlotLists() {
-        for (int nStart=1; nStart<=capacity; nStart++)
+        for (int nStart=1; nStart<=capacity_; nStart++)
             printSlotList(nStart);
     }
 
     void printSlotList(slot_t nStart) {
-        std::vector<slot_t> prev(capacity + 1);
-        for (int n=1; n<=capacity; n++) {
+        std::vector<slot_t> prev(capacity_ + 1);
+        for (int n=1; n<=capacity_; n++) {
             prev[slots[n].next] = n;
         }
         printSlotListFrom(nStart);
@@ -182,8 +182,7 @@ public:
     }
 
     bool put(K key, V value) {
-        auto hash = murmur3_32(&key,sizeof(key));
-        slot_t nSlot = (slot_t)(hash % capacity_) + 1; //0 is reserved as nullptr
+        slot_t nSlot = startSlot(key);
         slot_t nSlot2 = 0;
         if (bits->isSlotOccupied(nSlot)) {
             Slot *slot = findFrom(key, nSlot);
@@ -209,14 +208,14 @@ public:
 
     void printStat() {
         slot_t maxlen = 0;
-        for (slot_t i=0; i < capacity; i++)
+        for (slot_t i=0; i < capacity_; i++)
             maxlen = std::max(maxlen, stat_slotlen(i));
         std::vector<slot_t> hist(maxlen+1);
-        for (slot_t i=0; i < capacity; i++)
+        for (slot_t i=0; i < capacity_; i++)
             hist[stat_slotlen(i)]++;
         slot_t sum = 0, count = 0;
         for (slot_t i=0; i<hist.size(); i++) {
-            printf("%d: %f\n", i, double(hist[i]) / capacity);
+            printf("%d: %f\n", i, double(hist[i]) / capacity_);
             if (i>0) {
                 sum += i * hist[i];
                 count+=hist[i];
