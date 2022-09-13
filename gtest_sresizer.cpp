@@ -12,7 +12,7 @@ TEST(SimpleResizer, toBaseSize) {
         SimpleResizer rl(kk);
         size_t n = 1;
         size_t maxn = 1L << 52;
-        const int maxRange = 1000;
+        const int maxRange = 100;
         EXPECT_EQ(rl.toBaseSize(0), max((size_t)2,kk));
         while (n < maxn) {
             size_t n2 = 2 * n;
