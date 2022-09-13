@@ -41,6 +41,7 @@ public:
     ~HashMap(){
         clear();
     };
+    slot_t erasedCount() {return 0;}
     uint32_t startSlot(const K key) {
         auto hash = murmur3_32(&key,sizeof(key));
         return (uint32_t)(hash % BaseHashMap<K,V>::capacity()) + 1;

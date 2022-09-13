@@ -6,6 +6,12 @@
 #define CACHE_BASEMAP_H
 
 
+template<typename K, typename V>
+struct BaseSlot {
+    std::pair<K,V> pair;
+};
+
+template<typename K, typename V>
 class BaseMap {
 
 };

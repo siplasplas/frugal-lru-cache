@@ -6,18 +6,20 @@
 #ifndef ARMAP_HPP
 #define ARMAP_HPP
 
-#include "SlotMap.hpp"
+//#include "SlotMap.hpp"
 #include "FrugalResizer.hpp"
 #include "SimpleResizer.hpp"
+#include "HashMap.hpp"
+#include "BaseMap.h"
 
 template<typename K, typename V>
 class ArMap {
-    SlotMap<K, V> *slotMap;
+    HashMap<K, V> *slotMap;
     IResizer *rl;
 
     void resize() {
         slot_t newCapacity = rl->newCapacity(capacity(), slotMap->erasedCount());
-        auto new_slotMap = new SlotMap<K, V>(newCapacity, rl->initCounter(newCapacity));
+        auto new_slotMap = new HashMap<K, V>(newCapacity, rl->initCounter(newCapacity));
         for (auto p: *slotMap) {
             new_slotMap->put(p);
         }
@@ -27,13 +29,13 @@ class ArMap {
 
 public:
     enum ResizerEnum {reSimple, reFrugal};
-    using Slot = SlotT<K, V>;
+    //using Slot = SlotT<K, V>;
     ArMap(slot_t MinSize = 16, ResizerEnum resizerEnum = reFrugal) {
         if (resizerEnum == reFrugal)
             rl = new FrugalResizer(MinSize);
         else
             rl = new SimpleResizer(MinSize);
-        slotMap = new SlotMap<K, V>(MinSize, rl->initCounter(MinSize));
+        slotMap = new HashMap<K, V>(MinSize, rl->initCounter(MinSize));
     }
     ~ArMap() {
         delete slotMap;
@@ -47,7 +49,7 @@ public:
         return slotMap->size();
     }
 
-    Slot *find(const K key) {
+    BaseSlot<K,V> *find(const K key) {
         return slotMap->find(key);
     }
 

@@ -7,15 +7,10 @@
 #include <vector>
 #include "BaseMap.h"
 
-template<typename K, typename V>
-struct BaseSlot {
-    std::pair<K,V> pair;
-};
-
 using slot_t = uint32_t;
 
 template<typename K, typename V>
-class BaseHashMap : public BaseMap {
+class BaseHashMap : public BaseMap<K,V> {
 protected:
     friend class iterator;
     slot_t capacity_;
