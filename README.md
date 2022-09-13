@@ -244,3 +244,11 @@ hypothetical, needed only in test case.
 
 #### simple auto-resizing
 Only powers of two are allowed as capacity.
+
+
+# Trees
+see
+- https://github.com/SvenWoltmann/binary-tree
+- https://www.happycoders.eu/algorithms/avl-tree-java/
+- https://www.happycoders.eu/algorithms/red-black-tree-java/
+
