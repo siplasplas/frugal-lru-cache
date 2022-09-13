@@ -13,16 +13,13 @@
 #include "BaseHashMap.hpp"
 
 template<typename K, typename V>
-struct SlotM {
-    std::pair<K,V> pair;
+struct SlotM : BaseSlot<K,V> {
     SlotM* next;
 };
 
 
 template<typename K, typename V>
 class HashMap: public BaseHashMap<K,V> {
-public:
-    uint32_t counter;
 protected:
     uint32_t size_ = 0;
     using Slot = SlotM<K, V>;
@@ -30,8 +27,19 @@ protected:
     PSlot *slots;
 protected:
     void skipEmpties(typename BaseHashMap<K,V>::iterator *it) override {
+        slot_t nSlot = it->nSlot+1;
+        while (nSlot <= BaseHashMap<K,V>::capacity_ && !(slots[nSlot]))
+            nSlot++;
+        it->nSlot = nSlot;
+        if (it->nSlot <= BaseHashMap<K,V>::capacity_)
+            it->slot = slots[it->nSlot];
+        else
+            it->slot = nullptr;
     }
     void increaseIt(typename BaseHashMap<K,V>::iterator *it) override {
+        it->slot = PSlot(it->slot)->next;
+        if (!it->slot)
+            skipEmpties(it);
     }
 public:
     HashMap(uint32_t capacity, uint32_t counter): BaseHashMap<K, V>(capacity,counter) {
@@ -62,7 +70,7 @@ public:
         slot->next = slots[nSlot];
         slots[nSlot] = slot;
         size_++;
-        counter--;
+        BaseHashMap<K,V>::counter--;
         return true;
     }
     void deleteSlot(uint32_t nSlot) {
@@ -100,7 +108,7 @@ public:
             slots[nSlot] = slot->next;
             delete slot;
             size_--;
-            counter++;
+            BaseHashMap<K,V>::counter++;
             return;
         }
         auto previous = slot;
@@ -110,7 +118,7 @@ public:
                 previous->next = slot->next;
                 delete slot;
                 size_--;
-                counter++;
+                BaseHashMap<K,V>::counter++;
                 return;
             }
             previous = slot;

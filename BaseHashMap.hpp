@@ -27,6 +27,7 @@ public:
         slot_t nSlot;
         BaseSlot<K,V> *slot;
         iterator(BaseHashMap *owner, slot_t nSlot) : owner(owner), nSlot(nSlot) {
+            slot = nullptr;
             owner->skipEmpties(this);
         }
         std::pair<K,V> operator*() {   return slot->pair; }
