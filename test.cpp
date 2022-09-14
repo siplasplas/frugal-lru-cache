@@ -33,29 +33,36 @@ void printDiff(struct mallinfo2 &ma, struct mallinfo2 &mb) {
 }
 
 int main() {
-
-/*    auto m1a =  mallinfo2();
+    StopWatch sw;
+    auto m1a =  mallinfo2();
     auto *lru_cache = new cache::lru_cache<int, int>(COUNT);
+    sw.start();
     for (int i=0; i<COUNT; i++) {
         lru_cache->put(i, i);
     }
+    sw.stop();
+    cout << "classic lru" << endl;
+    cout << "time=" << sw.duration() <<endl;
     auto m1b =  mallinfo2();
-    cout << "classic" << endl;
     printDiff(m1a, m1b);
     delete lru_cache;
 
     auto m0a =  mallinfo2();
     auto *ma = new SlotMap<int,int>(COUNT,COUNT);
+    sw.start();
     for (int i=0; i<COUNT; i++)
         ma->put(i,i);
 
-    auto m0b =  mallinfo2();
+    sw.stop();
     cout << "slot map" << endl;
-    printDiff(m0a, m0b);*/
+    cout << "time=" << sw.duration() <<endl;
+    auto m0b =  mallinfo2();
+
+    printDiff(m0a, m0b);
 
     auto m2a =  mallinfo2();
     auto *avl = new AvlTree;
-    StopWatch sw;
+
     sw.start();
     for (int i=0; i<COUNT; i++) {
         avl->insertNode(i);
