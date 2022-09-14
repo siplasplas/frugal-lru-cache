@@ -12,7 +12,10 @@ add_executable(${PROJECT_NAME} lrucache.hpp gtest_lru.cpp
         ArMap.hpp gtest_armap.cpp SimpleResizer.hpp
         IResizer.h
         HashMap.hpp gtest_hmap.cpp
-        BaseMap.h BaseHashMap.hpp)
+        BaseMap.h BaseHashMap.hpp
+        trees/BinarySearchTree.h trees/BinarySearchTreeRecursive.h
+        trees/BaseBinaryTree.h trees/BinaryTree.h trees/RedBlackTree.h
+        trees/gtest_redblack.cpp)
 
 target_link_libraries(${PROJECT_NAME} gtest gtest_main)
 
