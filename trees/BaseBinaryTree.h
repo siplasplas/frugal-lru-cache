@@ -28,6 +28,20 @@ protected:
     }
 
 public:
+    void clear(Node* node) {
+        if (node->left)
+            clear(node->left);
+        if (node->right)
+            clear(node->right);
+        delete node;
+    }
+
+    void clear() {
+        clear(root);
+    }
+    virtual ~BaseBinaryTree() {
+        clear();
+    }
     Node* getRoot() override {
         return root;
     }
