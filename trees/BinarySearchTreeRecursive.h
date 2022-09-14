@@ -78,14 +78,19 @@ protected:
 
             // Node* has no children --> just delete it
         else if (node->left == nullptr && node->right == nullptr) {
+            delete node;
             node = nullptr;
         }
 
             // Node* has only one child --> replace node by its single child
         else if (node->left == nullptr) {
+            Node *tmp = node;
             node = node->right;
+            delete tmp;
         } else if (node->right == nullptr) {
+            Node *tmp = node;
             node = node->left;
+            delete tmp;
         }
 
             // Node* has two children
