@@ -15,6 +15,11 @@ protected:
     friend class iterator;
     slot_t capacity_;
 public:
+    bool putPair(std::pair<K,V> pair) {
+        return put(pair.first, pair.second);
+    }
+    virtual bool put(K key, V value) = 0;
+    virtual slot_t erasedCount() = 0;
     slot_t counter;
     BaseHashMap(slot_t capacity, slot_t counter): capacity_(capacity), counter(counter) {
     }
@@ -55,7 +60,7 @@ public:
         return it;
     }
 
-protected:
+public:
     virtual void skipEmpties(iterator *it) = 0;
     virtual void increaseIt(iterator *it) = 0;
 };

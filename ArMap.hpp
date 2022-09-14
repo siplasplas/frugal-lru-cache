@@ -9,19 +9,19 @@
 //#include "SlotMap.hpp"
 #include "FrugalResizer.hpp"
 #include "SimpleResizer.hpp"
-#include "HashMap.hpp"
+#include "SlotMap.hpp"
 #include "BaseMap.h"
 
 template<typename K, typename V>
-class ArMap {
-    HashMap<K, V> *slotMap;
+class ArMap : public BaseHashMap<K,V> {
+    BaseHashMap<K, V> *slotMap;
     IResizer *rl;
 
     void resize() {
         slot_t newCapacity = rl->newCapacity(capacity(), slotMap->erasedCount());
-        auto new_slotMap = new HashMap<K, V>(newCapacity, rl->initCounter(newCapacity));
+        auto new_slotMap = new SlotMap<K, V>(newCapacity, rl->initCounter(newCapacity));
         for (auto p: *slotMap) {
-            new_slotMap->put(p);
+            new_slotMap->putPair(p);
         }
         delete slotMap;
         slotMap = new_slotMap;
@@ -30,12 +30,13 @@ class ArMap {
 public:
     enum ResizerEnum {reSimple, reFrugal};
     //using Slot = SlotT<K, V>;
-    ArMap(slot_t MinSize = 16, ResizerEnum resizerEnum = reFrugal) {
+    ArMap(slot_t MinSize = 16, ResizerEnum resizerEnum = reFrugal)
+                    : BaseHashMap<K, V>(MinSize, 0){
         if (resizerEnum == reFrugal)
             rl = new FrugalResizer(MinSize);
         else
             rl = new SimpleResizer(MinSize);
-        slotMap = new HashMap<K, V>(MinSize, rl->initCounter(MinSize));
+        slotMap = new SlotMap<K, V>(MinSize, rl->initCounter(MinSize));
     }
     ~ArMap() {
         delete slotMap;
@@ -53,15 +54,28 @@ public:
         return slotMap->find(key);
     }
 
-    void put(K key, V value)     {
+    bool put(K key, V value) override {
         if (!slotMap->put(key, value))
             throw std::overflow_error("SlotMap overflows");
         if (!slotMap->counter)
             resize();
+        return true;
     }
 
     void erase(const K key) {
         slotMap->erase(key);
+    }
+
+    slot_t erasedCount() override {
+        return slotMap->erasedCount();
+    }
+
+    void skipEmpties(typename BaseHashMap<K,V>::iterator *it) override{
+        slotMap->skipEmpties(it);
+    }
+
+    void increaseIt(typename BaseHashMap<K,V>::iterator *it) override {
+        slotMap->increaseIt(it);
     }
 };
 

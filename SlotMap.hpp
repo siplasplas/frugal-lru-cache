@@ -146,11 +146,7 @@ public:
         printf("\n");
     }
 
-    bool put(std::pair<K,V> pair) {
-        return put(pair.first, pair.second);
-    }
-
-    bool put(K key, V value) {
+    bool put(K key, V value) override {
         slot_t nSlot = startSlot(key);
         slot_t nSlot2 = 0;
         if (bits->isSlotOccupied(nSlot)) {
@@ -193,7 +189,7 @@ public:
         printf("average %f\n",double(sum)/count);
     }
 
-    slot_t erasedCount() {
+    slot_t erasedCount() override {
         return ebits->erasedCount();
     }
 };

@@ -49,7 +49,7 @@ public:
     ~HashMap(){
         clear();
     };
-    slot_t erasedCount() {return 0;}
+    slot_t erasedCount() override {return 0;}
     uint32_t startSlot(const K key) {
         auto hash = murmur3_32(&key,sizeof(key));
         return (uint32_t)(hash % BaseHashMap<K,V>::capacity()) + 1;
@@ -57,7 +57,7 @@ public:
     bool put(std::pair<K,V> pair) {
         return put(pair.first, pair.second);
     }
-    bool put(K key, V value) {
+    bool put(K key, V value) override {
         auto slot = find(key);
         if (slot) {
             assert(slot->pair.first==key);
