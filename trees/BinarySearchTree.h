@@ -12,7 +12,7 @@
  */
 class BinarySearchTree : public BaseBinaryTree, public IBinarySearchTree {
 
-    Node* searchNode(int key, Node* node) {
+    Node* searchNodeFrom(int key, Node* node) {
         if (node == nullptr) {
             return nullptr;
         }
@@ -20,9 +20,9 @@ class BinarySearchTree : public BaseBinaryTree, public IBinarySearchTree {
         if (key == node->data) {
             return node;
         } else if (key < node->data) {
-            return searchNode(key, node->left);
+            return searchNodeFrom(key, node->left);
         } else {
-            return searchNode(key, node->right);
+            return searchNodeFrom(key, node->right);
         }
     }
     void deleteNodeWithTwoChildren(Node* node) {
@@ -103,7 +103,7 @@ protected:
 
 public:
     Node* searchNode(int key) {
-        return searchNode(key, root);
+        return searchNodeFrom(key, root);
     }
 
 
