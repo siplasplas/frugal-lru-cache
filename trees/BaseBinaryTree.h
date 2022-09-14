@@ -6,7 +6,7 @@
 
 class BaseBinaryTree: public virtual BinaryTree {
 protected:
-    Node* root;
+    Node* root = nullptr;
 
     std::string  appendNodeToStringRecursive(Node* node) {
         std::string str = appendNodeToString(node);
