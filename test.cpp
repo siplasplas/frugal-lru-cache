@@ -8,11 +8,11 @@
 #include "lrucache.hpp"
 #include "SlotMap.hpp"
 #include "trees/AvlTree.h"
-#include "SlotTree.hpp"
+#include "AVLSlotTree.hpp"
 
 using namespace std;
 
-const int COUNT = 4*1000*1000;
+const int COUNT = 100*1000;
 
 void printDiff(struct mallinfo2 &ma, struct mallinfo2 &mb) {
     cout << double((mb.uordblks+mb.hblkhd)-(ma.uordblks+ma.hblkhd))/COUNT <<endl;
@@ -51,13 +51,12 @@ int main() {
 
 
     auto m3a =  mallinfo2();
-    auto *savl = new SlotTree(COUNT);
+    auto *savl = new AVLSlotTree(COUNT);
     for (int i=0; i<COUNT; i++) {
         savl->insertNode(i);
     }
     auto m3b =  mallinfo2();
     cout << "slot AVL" << endl;
     printDiff(m3a, m3b);
-    delete avl;
-
+    delete savl;
 }

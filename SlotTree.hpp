@@ -24,16 +24,17 @@ class SlotTree {
     slot_t capacity;
     slot_t size = 0;
     slot_t erased = 0;
-    TreeSlot *slots;
     slot_t ptr;
     slot_t root = 0;
+protected:
+    TreeSlot *slots;
 public:
     SlotTree(int capacity):capacity(capacity){
         slots = new TreeSlot[capacity+1];
         ptr = 1;
     }
 
-    ~SlotTree(){
+    virtual ~SlotTree(){
         delete []slots;
     }
 

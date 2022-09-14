@@ -16,10 +16,10 @@ add_executable(${PROJECT_NAME} lrucache.hpp gtest_lru.cpp
         trees/IBinarySearchTree.h trees/BinarySearchTree.h
         trees/BaseBinaryTree.h trees/IBinaryTree.h
         trees/gtest_avl.cpp
-        trees/AvlTree.h SlotTree.hpp)
+        trees/AvlTree.h SlotTree.hpp AVLSlotTree.hpp)
 
 target_link_libraries(${PROJECT_NAME} gtest gtest_main)
 
 add_executable(test test.cpp lrucache.hpp
         MemInfo.cpp MemInfo.h
-        murmur.cpp SlotBits.hpp)
+        murmur.cpp SlotBits.hpp AVLSlotTree.hpp)
