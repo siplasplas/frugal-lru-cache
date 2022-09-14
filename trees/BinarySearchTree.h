@@ -10,7 +10,7 @@
  *
  * translate from @author <a href="sven@happycoders.eu">Sven Woltmann</a>
  */
-class BinarySearchTreeRecursive : public BaseBinaryTree, public IBinarySearchTree {
+class BinarySearchTree : public BaseBinaryTree, public IBinarySearchTree {
 
     Node* searchNode(int key, Node* node) {
         if (node == nullptr) {

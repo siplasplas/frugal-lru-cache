@@ -1,17 +1,17 @@
 #ifndef CACHE_AVLTREE_H
 #define CACHE_AVLTREE_H
 
-#include "BinarySearchTreeRecursive.h"
+#include "BinarySearchTree.h"
 
-class AvlTree : public BinarySearchTreeRecursive {
+class AvlTree : public BinarySearchTree {
     Node* insertNodeTo(int key, Node* node) override {
-        node = BinarySearchTreeRecursive::insertNodeTo(key, node);
+        node = BinarySearchTree::insertNodeTo(key, node);
         updateHeight(node);
         return rebalance(node);
     }
 
     Node* deleteNodeTo(int key, Node* node) override {
-        node = BinarySearchTreeRecursive::deleteNodeTo(key, node);
+        node = BinarySearchTree::deleteNodeTo(key, node);
 
         // Node* is nullptr if the tree doesn't contain the key
         if (node == nullptr) {
