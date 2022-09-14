@@ -48,33 +48,6 @@ protected:
             return secondNode;
     }
 
-    Node* searchNodeFrom2(int key, Node* node, SearchKind sk) {
-        if (node == nullptr) {
-            return nullptr;
-        }
-
-        if (key == node->data) {
-            return node;
-        } else if (key < node->data) {
-            if (sk==skGE) {
-                auto eqnode = searchNodeFrom(key, node->left, sk);
-                if (!eqnode)
-                    return node;
-                else
-                    return eqnode;
-            } else
-                return searchNodeFrom(key, node->left, sk);
-        } else {
-            if (sk==skLE) {
-                auto eqnode = searchNodeFrom(key, node->right, sk);
-                if (!eqnode)
-                    return node;
-                else
-                    return eqnode;
-            }
-            else return searchNodeFrom(key, node->right, sk);
-        }
-    }
     void deleteNodeWithTwoChildren(Node* node) {
         // Find minimum node of right subtree ("inorder successor" of current node)
         Node* inOrderSuccessor = findMinimum(node->right);
