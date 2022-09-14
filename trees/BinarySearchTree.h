@@ -11,8 +11,44 @@
  * translate from @author <a href="sven@happycoders.eu">Sven Woltmann</a>
  */
 class BinarySearchTree : public BaseBinaryTree, public IBinarySearchTree {
-
+public:
+    enum SearchKind {skEq, skLE, skGE};
+protected:
     Node* searchNodeFrom(int key, Node* node) {
+        while (node != nullptr) {
+            if (key == node->data) {
+                return node;
+            } else if (key < node->data) {
+                node = node->left;
+            } else {
+                node = node->right;
+            }
+        }
+        return nullptr;
+    }
+
+    Node* searchNodeFrom(int key, Node* node, SearchKind sk) {
+        Node* secondNode = nullptr;
+        while (node != nullptr) {
+            if (key == node->data) {
+                return node;
+            } else if (key < node->data) {
+                if (sk==skGE)
+                    secondNode = node;
+                node = node->left;
+            } else {
+                if (sk==skLE)
+                    secondNode = node;
+                node = node->right;
+            }
+        }
+        if (sk==skEq)
+            return nullptr;
+        else
+            return secondNode;
+    }
+
+    Node* searchNodeFrom2(int key, Node* node, SearchKind sk) {
         if (node == nullptr) {
             return nullptr;
         }
@@ -20,9 +56,23 @@ class BinarySearchTree : public BaseBinaryTree, public IBinarySearchTree {
         if (key == node->data) {
             return node;
         } else if (key < node->data) {
-            return searchNodeFrom(key, node->left);
+            if (sk==skGE) {
+                auto eqnode = searchNodeFrom(key, node->left, sk);
+                if (!eqnode)
+                    return node;
+                else
+                    return eqnode;
+            } else
+                return searchNodeFrom(key, node->left, sk);
         } else {
-            return searchNodeFrom(key, node->right);
+            if (sk==skLE) {
+                auto eqnode = searchNodeFrom(key, node->right, sk);
+                if (!eqnode)
+                    return node;
+                else
+                    return eqnode;
+            }
+            else return searchNodeFrom(key, node->right, sk);
         }
     }
     void deleteNodeWithTwoChildren(Node* node) {
@@ -37,6 +87,7 @@ class BinarySearchTree : public BaseBinaryTree, public IBinarySearchTree {
     }
 
     Node* findMinimum(Node* node) {
+        if (!node) return nullptr;
         while (node->left != nullptr) {
             node = node->left;
         }
@@ -44,6 +95,7 @@ class BinarySearchTree : public BaseBinaryTree, public IBinarySearchTree {
     }
 
     Node* findMaximum(Node* node) {
+        if (!node) return nullptr;
         while (node->right != nullptr) {
             node = node->right;
         }
@@ -111,6 +163,10 @@ protected:
 public:
     Node* searchNode(int key) {
         return searchNodeFrom(key, root);
+    }
+
+    Node* searchNode(int key, SearchKind sk) {
+        return searchNodeFrom(key, root, sk);
     }
 
 
