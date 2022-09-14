@@ -46,7 +46,7 @@ public:
         slots = new PSlot[capacity + 1];
         memset(slots,0, sizeof(PSlot)*(capacity + 1));
     }
-    ~HashMap(){
+    ~HashMap() override {
         clear();
     };
     slot_t erasedCount() override {return 0;}
@@ -90,7 +90,7 @@ public:
         return size_;
     }
 
-    Slot* find(const K key) {
+    Slot* find(const K key) override {
         uint32_t nSlot = startSlot(key);
         auto slot = slots[nSlot];
         while(slot) {

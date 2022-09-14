@@ -90,17 +90,17 @@ public:
         slots = new Slot[capacity + 1];
     }
 
-    ~SlotMap() {
+    ~SlotMap() override {
         delete []slots;
         delete ebits;
         delete bits;
     }
 
-    slot_t size() {
+    slot_t size() override {
         return ebits->availCount-bits->availCount;
     }
 
-    Slot* find(const K key) {
+    Slot* find(const K key) override {
         slot_t slot = findNFrom(key, startSlot(key));
         if (bits->isSlotFree(slot)) return nullptr;
         if (ebits->isSlotOccupied(slot)) return nullptr;

@@ -10,7 +10,6 @@
 #include "FrugalResizer.hpp"
 #include "SimpleResizer.hpp"
 #include "SlotMap.hpp"
-#include "BaseMap.h"
 
 template<typename K, typename V>
 class ArMap : public BaseHashMap<K,V> {
@@ -38,7 +37,7 @@ public:
             rl = new SimpleResizer(MinSize);
         slotMap = new SlotMap<K, V>(MinSize, rl->initCounter(MinSize));
     }
-    ~ArMap() {
+    ~ArMap() override {
         delete slotMap;
         delete rl;
     }
@@ -46,11 +45,11 @@ public:
     slot_t capacity() {
         return slotMap->capacity();
     }
-    slot_t size() {
+    slot_t size() override {
         return slotMap->size();
     }
 
-    BaseSlot<K,V> *find(const K key) {
+    BaseSlot<K,V> *find(const K key) override {
         return slotMap->find(key);
     }
 

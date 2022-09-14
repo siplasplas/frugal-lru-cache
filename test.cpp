@@ -10,6 +10,7 @@
 #include "SlotMap.hpp"
 #include "trees/AvlTree.h"
 #include "AVLSlotTree.hpp"
+#include "PlanarCache.hpp"
 
 using namespace std;
 
@@ -87,4 +88,17 @@ int main() {
     auto m3b =  mallinfo2();
     printDiff(m3a, m3b);
     delete savl;
+
+    auto m4a =  mallinfo2();
+    auto *cache = new PlanarCache<int,int>(3, COUNT/2, true);
+    sw.start();
+    for (int i=0; i<COUNT; i++) {
+        cache->put(i,i);
+    }
+    sw.stop();
+    cout << "planar cache 3" << endl;
+    cout << "time=" << sw.duration() <<endl;
+    auto m4b =  mallinfo2();
+    printDiff(m4a, m4b);
+    delete cache;
 }

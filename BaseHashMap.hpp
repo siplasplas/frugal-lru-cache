@@ -5,12 +5,16 @@
 #define CACHE_BASEHASHMAP_H
 
 #include <vector>
-#include "BaseMap.h"
 
 using slot_t = uint32_t;
 
 template<typename K, typename V>
-class BaseHashMap : public BaseMap<K,V> {
+struct BaseSlot {
+    std::pair<K,V> pair;
+};
+
+template<typename K, typename V>
+class BaseHashMap {
 protected:
     friend class iterator;
     slot_t capacity_;
@@ -19,9 +23,15 @@ public:
         return put(pair.first, pair.second);
     }
     virtual bool put(K key, V value) = 0;
+    virtual BaseSlot<K,V> *find(const K key) = 0;
+
     virtual slot_t erasedCount() = 0;
+    virtual slot_t size() = 0;
     slot_t counter;
     BaseHashMap(slot_t capacity, slot_t counter): capacity_(capacity), counter(counter) {
+    }
+    virtual ~BaseHashMap() {
+
     }
     slot_t capacity() {
         return capacity_;

@@ -12,14 +12,14 @@ add_executable(${PROJECT_NAME} lrucache.hpp gtest_lru.cpp
         ArMap.hpp gtest_armap.cpp SimpleResizer.hpp
         IResizer.h
         HashMap.hpp gtest_hmap.cpp
-        BaseMap.h BaseHashMap.hpp
+        BaseHashMap.hpp
         trees/IBinarySearchTree.h trees/BinarySearchTree.h
         trees/BaseBinaryTree.h trees/IBinaryTree.h
         trees/gtest_avl.cpp
-        trees/AvlTree.h SlotTree.hpp AVLSlotTree.hpp)
+        trees/AvlTree.h SlotTree.hpp AVLSlotTree.hpp PlanarCache.hpp)
 
 target_link_libraries(${PROJECT_NAME} gtest gtest_main)
 
 add_executable(test test.cpp lrucache.hpp
         MemInfo.cpp MemInfo.h
-        murmur.cpp SlotBits.hpp AVLSlotTree.hpp)
+        murmur.cpp SlotBits.hpp AVLSlotTree.hpp PlanarCache.hpp)
