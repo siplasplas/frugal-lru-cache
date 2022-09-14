@@ -1,5 +1,5 @@
-#ifndef CACHE_BINARYSEARCHTREE_H
-#define CACHE_BINARYSEARCHTREE_H
+#ifndef CACHE_IBINARYSEARCHTREE_H
+#define CACHE_IBINARYSEARCHTREE_H
 
 #include "IBinaryTree.h"
 
@@ -31,4 +31,4 @@ class IBinarySearchTree : public virtual IBinaryTree {
 
 };
 
-#endif //CACHE_BINARYSEARCHTREE_H
+#endif //CACHE_IBINARYSEARCHTREE_H
