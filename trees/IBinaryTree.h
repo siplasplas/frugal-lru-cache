@@ -2,18 +2,15 @@
 #define CACHE_BINARYTREE_H
 
 struct Node {
-    enum Color{ RED, BLACK, NIL };
     // also called "value" in a binary tree
     // also called "key" in a binary search tree
     int data;
 
     Node* left = nullptr;
     Node* right = nullptr;
-    Node* parent = nullptr; // used in SimpleBinaryTree + red-black tree
+    //Node* parent = nullptr; // used in SimpleBinaryTree + red-black tree
 
-    int height = 0; // used in AVL tree
-    Color color = BLACK; // used in red-black tree
-
+    uint8_t height = 0; // used in AVL tree
     /**
      * Constructs a new node with the given data.
      *
