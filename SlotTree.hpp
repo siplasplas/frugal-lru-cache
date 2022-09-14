@@ -22,7 +22,7 @@ struct TreeSlot {
 
 class SlotTree {
     slot_t capacity;
-    slot_t size = 0;
+    slot_t size_ = 0;
     slot_t erased = 0;
     slot_t ptr;
     slot_t root = 0;
@@ -32,17 +32,36 @@ public:
     SlotTree(int capacity):capacity(capacity){
         slots = new TreeSlot[capacity+1];
         ptr = 1;
+        resizer = new FrugalResizer(capacity);
+        counter = resizer->initCounter(capacity);
     }
 
     virtual ~SlotTree(){
         delete []slots;
     }
 
+    slot_t size() {return size_; }
+
     virtual void insertNode(int key) {
         root = insertNodeTo(key, root);
+        if (!counter) resize();
     }
 
 protected:
+    slot_t counter;
+    IResizer* resizer;
+
+    void resize() {
+        slot_t newCapacity_ = resizer->newCapacity(capacity, 0);
+        TreeSlot *newSlots = new TreeSlot[newCapacity_];
+        memcpy(newSlots, slots, ptr*sizeof(TreeSlot));
+        delete []slots;
+        slots = newSlots;
+        capacity = newCapacity_;
+        counter = resizer->initCounter(capacity);
+        counter -= ptr-1;
+    }
+
     virtual slot_t insertNodeTo(int key, slot_t parentSlot) {
         // No node at current position -. store new node at current position
         if (!parentSlot) {
@@ -51,7 +70,8 @@ protected:
             slot.left = slot.right = 0;
             slot.height = 0;
             ptr++;
-            size++;
+            size_++;
+            counter--;
             return ptr-1;
         }
         TreeSlot& node = slots[parentSlot];
@@ -61,7 +81,7 @@ protected:
         } else if (key > node.data) {
             node.right = insertNodeTo(key, node.right);
         } else {
-            throw std::runtime_error("BST already contains a node with key " + std::to_string(key));
+            //throw std::runtime_error("BST already contains a node with key " + std::to_string(key));
         }
         return parentSlot;
     }
@@ -81,18 +101,18 @@ protected:
 
         // Node* has no children --> just delete it
         else if (node.left == 0 && node.right == 0) {
-            size--;
+            size_--;
             erased++;
             return 0;
         }
 
         // Node* has only one child --> replace node by its single child
         else if (node.left == 0) {
-            size--;
+            size_--;
             erased++;
             return node.right;
         } else if (node.right == 0) {
-            size--;
+            size_--;
             erased++;
             return node.left;
         }

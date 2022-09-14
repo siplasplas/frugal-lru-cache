@@ -9,12 +9,14 @@
 
 class AVLSlotTree : public SlotTree {
 public:
-    AVLSlotTree(slot_t capacity): SlotTree(capacity) {}
+    AVLSlotTree(slot_t capacity=256): SlotTree(capacity) {
+    }
 protected:
     slot_t insertNodeTo(int key, slot_t nodeSlot) override {
         nodeSlot = SlotTree::insertNodeTo(key, nodeSlot);
         updateHeight(nodeSlot);
-        return rebalance(nodeSlot);
+        nodeSlot = rebalance(nodeSlot);
+        return nodeSlot;
     }
 
     slot_t deleteNodeTo(int key, slot_t nodeSlot) override {

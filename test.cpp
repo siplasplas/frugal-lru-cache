@@ -51,7 +51,7 @@ int main() {
 
 
     auto m3a =  mallinfo2();
-    auto *savl = new AVLSlotTree(COUNT);
+    auto *savl = new AVLSlotTree;
     for (int i=0; i<COUNT; i++) {
         savl->insertNode(i);
     }
