@@ -1,14 +1,14 @@
 #ifndef CACHE_BINARYSEARCHTREE_H
 #define CACHE_BINARYSEARCHTREE_H
 
-#include "BinaryTree.h"
+#include "IBinaryTree.h"
 
 /**
  * Interface for various BST implementations.
  *
  * translated from @author <a href="sven@happycoders.eu">Sven Woltmann</a>
  */
-class BinarySearchTree : public virtual BinaryTree {
+class IBinarySearchTree : public virtual IBinaryTree {
     /**
      * Searches for a node with the given search key.
      *

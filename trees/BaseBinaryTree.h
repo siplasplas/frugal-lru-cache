@@ -2,9 +2,9 @@
 #define CACHE_BASEBINARYTREE_H
 
 #include <string>
-#include "BinaryTree.h"
+#include "IBinaryTree.h"
 
-class BaseBinaryTree: public virtual BinaryTree {
+class BaseBinaryTree: public virtual IBinaryTree {
 protected:
     Node* root = nullptr;
 

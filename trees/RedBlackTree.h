@@ -2,7 +2,7 @@
 #define CACHE_REDBLACKTREE_H
 
 #include "BaseBinaryTree.h"
-#include "BinarySearchTree.h"
+#include "IBinarySearchTree.h"
 #include <stdexcept>
 
 /**
@@ -10,7 +10,7 @@
  *
  * @author <a href="sven@happycoders.eu">Sven Woltmann</a>
  */
-class RedBlackTree : public BaseBinaryTree, public BinarySearchTree {
+class RedBlackTree : public BaseBinaryTree, public IBinarySearchTree {
 public:
     Node* searchNode(int key) {
         Node* node = root;

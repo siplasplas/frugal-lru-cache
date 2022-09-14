@@ -32,7 +32,7 @@ struct Node {
  *
  * translated from @author <a href="sven@happycoders.eu">Sven Woltmann</a>
  */
-class BinaryTree {
+class IBinaryTree {
 public:
     /**
      * Returns the binary tree's root node.

@@ -1,7 +1,7 @@
 #ifndef CACHE_BINARYSEARCHTREERECURSIVE_H
 #define CACHE_BINARYSEARCHTREERECURSIVE_H
 
-#include "BinarySearchTree.h"
+#include "IBinarySearchTree.h"
 #include "BaseBinaryTree.h"
 #include <stdexcept>
 
@@ -10,7 +10,7 @@
  *
  * translate from @author <a href="sven@happycoders.eu">Sven Woltmann</a>
  */
-class BinarySearchTreeRecursive : public BaseBinaryTree, public BinarySearchTree {
+class BinarySearchTreeRecursive : public BaseBinaryTree, public IBinarySearchTree {
 
     Node* searchNode(int key, Node* node) {
         if (node == nullptr) {

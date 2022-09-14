@@ -13,8 +13,8 @@ add_executable(${PROJECT_NAME} lrucache.hpp gtest_lru.cpp
         IResizer.h
         HashMap.hpp gtest_hmap.cpp
         BaseMap.h BaseHashMap.hpp
-        trees/BinarySearchTree.h trees/BinarySearchTreeRecursive.h
-        trees/BaseBinaryTree.h trees/BinaryTree.h trees/RedBlackTree.h
+        trees/IBinarySearchTree.h trees/BinarySearchTreeRecursive.h
+        trees/BaseBinaryTree.h trees/IBinaryTree.h trees/RedBlackTree.h
         trees/gtest_redblack.cpp
         trees/AvlTree.h)
 
