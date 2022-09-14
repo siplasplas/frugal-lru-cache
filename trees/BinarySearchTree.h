@@ -1,5 +1,5 @@
-#ifndef CACHE_BINARYSEARCHTREERECURSIVE_H
-#define CACHE_BINARYSEARCHTREERECURSIVE_H
+#ifndef CACHE_BINARYSEARCHTREE_H
+#define CACHE_BINARYSEARCHTREE_H
 
 #include "IBinarySearchTree.h"
 #include "BaseBinaryTree.h"
@@ -39,6 +39,13 @@ class BinarySearchTree : public BaseBinaryTree, public IBinarySearchTree {
     Node* findMinimum(Node* node) {
         while (node->left != nullptr) {
             node = node->left;
+        }
+        return node;
+    }
+
+    Node* findMaximum(Node* node) {
+        while (node->right != nullptr) {
+            node = node->right;
         }
         return node;
     }
@@ -119,4 +126,4 @@ public:
 };
 
 
-#endif //CACHE_BINARYSEARCHTREERECURSIVE_H
+#endif //CACHE_BINARYSEARCHTREE_H
