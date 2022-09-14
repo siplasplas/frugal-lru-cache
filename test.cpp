@@ -7,6 +7,8 @@
 #include <malloc.h>
 #include "lrucache.hpp"
 #include "SlotMap.hpp"
+#include "trees/AvlTree.h"
+#include "SlotTree.hpp"
 
 using namespace std;
 
@@ -17,7 +19,8 @@ void printDiff(struct mallinfo2 &ma, struct mallinfo2 &mb) {
 }
 
 int main() {
-    auto m1a =  mallinfo2();
+
+/*    auto m1a =  mallinfo2();
     auto *lru_cache = new cache::lru_cache<int, int>(COUNT);
     for (int i=0; i<COUNT; i++) {
         lru_cache->put(i, i);
@@ -34,5 +37,27 @@ int main() {
 
     auto m0b =  mallinfo2();
     cout << "slot map" << endl;
-    printDiff(m0a, m0b);
+    printDiff(m0a, m0b);*/
+
+    auto m2a =  mallinfo2();
+    auto *avl = new AvlTree;
+    for (int i=0; i<COUNT; i++) {
+        avl->insertNode(i);
+    }
+    auto m2b =  mallinfo2();
+    cout << "AVL" << endl;
+    printDiff(m2a, m2b);
+    delete avl;
+
+
+    auto m3a =  mallinfo2();
+    auto *savl = new SlotTree(COUNT);
+    for (int i=0; i<COUNT; i++) {
+        savl->insertNode(i);
+    }
+    auto m3b =  mallinfo2();
+    cout << "slot AVL" << endl;
+    printDiff(m3a, m3b);
+    delete avl;
+
 }
