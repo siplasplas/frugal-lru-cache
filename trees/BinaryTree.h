@@ -42,5 +42,4 @@ public:
     virtual Node* getRoot() = 0;
 };
 
-
 #endif //CACHE_BINARYTREE_H

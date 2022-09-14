@@ -31,5 +31,4 @@ class BinarySearchTree : public virtual BinaryTree {
 
 };
 
-
 #endif //CACHE_BINARYSEARCHTREE_H

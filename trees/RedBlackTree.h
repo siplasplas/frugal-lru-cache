@@ -114,7 +114,7 @@ public:
         }
     }
 
-     Node* getUncle(Node *parent) {
+    Node* getUncle(Node *parent) {
         Node *grandparent = parent->parent;
         if (grandparent->left == parent) {
             return grandparent->right;
@@ -125,7 +125,7 @@ public:
         }
     }
 
-     Node* deleteNodeWithZeroOrOneChild(Node *node) {
+    Node* deleteNodeWithZeroOrOneChild(Node *node) {
         // Node has ONLY a left child --> replace by its left child
         if (node->left != nullptr) {
             replaceParentsChild(node->parent, node, node->left);
@@ -147,12 +147,12 @@ public:
                 newChild = new Node(0);
                 newChild->color = Node::NIL;
             } else newChild = nullptr;
-           replaceParentsChild(node->parent, node, newChild);
-           return newChild;
+            replaceParentsChild(node->parent, node, newChild);
+            return newChild;
         }
     }
 
-     void replaceParentsChild(Node *parent, Node *oldChild, Node *newChild) {
+    void replaceParentsChild(Node *parent, Node *oldChild, Node *newChild) {
         if (parent == nullptr) {
             root = newChild;
         } else if (parent->left == oldChild) {
@@ -167,7 +167,7 @@ public:
             newChild->parent = parent;
         }
     }
-     Node* findMinimum(Node *node) {
+    Node* findMinimum(Node *node) {
         while (node->left != nullptr) {
             node = node->left;
         }
@@ -211,7 +211,7 @@ public:
         }
     }
 
-     void handleRedSibling(Node *node, Node *sibling) {
+    void handleRedSibling(Node *node, Node *sibling) {
         // Recolor...
         sibling->color = Node::BLACK;
         node->parent->color = Node::RED;
@@ -279,7 +279,7 @@ public:
 
     // -- Helpers for insertion and deletion ---------------------------------------------------------
 
- void rotateRight(Node *node) {
+    void rotateRight(Node *node) {
         Node* parent = node->parent;
         Node* leftChild = node->left;
 
@@ -294,7 +294,7 @@ public:
         replaceParentsChild(parent, node, leftChild);
     }
 
-   void rotateLeft(Node* node) {
+    void rotateLeft(Node* node) {
         Node* parent = node->parent;
         Node* rightChild = node->right;
 
@@ -310,10 +310,10 @@ public:
     }
 
 
-public:    
+public:
     // -- Insertion ----------------------------------------------------------------------------------
 
-     void insertNode(int key) {
+    void insertNode(int key) {
         Node* node = root;
         Node* parent = nullptr;
 
@@ -350,7 +350,7 @@ public:
     // -- Deletion -----------------------------------------------------------------------------------
 
 
-     void deleteNode(int key) {
+    void deleteNode(int key) {
         Node *node = root;
 
         // Find the node to be deleted
@@ -404,16 +404,6 @@ public:
         }
     }
 
-
-
-
-
-
-
-
-
-
-
 protected:
     // -- For toString() -----------------------------------------------------------------------------
     std::string appendNodeToString(Node *node) {
@@ -421,6 +411,5 @@ protected:
     }
 
 };
-
 
 #endif //CACHE_REDBLACKTREE_H

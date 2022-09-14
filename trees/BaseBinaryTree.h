@@ -38,5 +38,4 @@ public:
 
 };
 
-
 #endif //CACHE_BASEBINARYTREE_H
