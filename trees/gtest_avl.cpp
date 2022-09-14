@@ -6,8 +6,13 @@
 
 using namespace std;
 
-TEST(AVL, test) {
+TEST(AVL, search) {
     AvlTree avl;
-    for (int i=0; i<1000; i++)
+    for (int i=0; i<40; i+=2)
         avl.insertNode(i);
+    for (int i=0; i<40; i+=2) {
+        auto node = avl.searchNode(i);
+        EXPECT_EQ(node->data, i);
+        EXPECT_EQ(avl.searchNode(i+1), nullptr);
+    }
 }
