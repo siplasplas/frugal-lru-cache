@@ -11,12 +11,14 @@
 
 using slot_t = uint32_t;
 
+#pragma pack(push, 1)
 struct TreeSlot {
     int data;
     slot_t left;
     slot_t right;
     uint8_t height = 0;
 };
+#pragma pack(pop)
 
 class SlotTree {
     slot_t capacity;
