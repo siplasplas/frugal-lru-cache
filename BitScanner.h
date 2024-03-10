@@ -45,4 +45,6 @@ static int BitScanReverse(uint64_t b)
     }
 };
 
+constexpr int BitScanner::MagicTable[];
+
 #endif //BITSCANNER_H
