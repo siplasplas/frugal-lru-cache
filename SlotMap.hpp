@@ -14,7 +14,7 @@
 
 template<typename K, typename V>
 struct SlotT: BaseSlot<K,V> {
-    slot_t next;
+    slot_t next = 0;
 };
 
 template<typename K, typename V>
@@ -55,6 +55,8 @@ private:
         while (nSlot) {
             Slot &slot = slots[nSlot];
             if (slot.pair.first==key) return nSlot;
+            if ((int)slot.next==-1)
+              printf("88");
             nSlot = slot.next;
         }
         return 0;
